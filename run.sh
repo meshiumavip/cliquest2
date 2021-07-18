@@ -4,4 +4,4 @@ mkdir build
 cd build
 cmake ..
 make
-./test/sample_test 
+./test/cliquest_test

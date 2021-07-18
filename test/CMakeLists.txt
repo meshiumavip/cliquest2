@@ -1,3 +1,3 @@
 # sample_test
-add_executable(sample_test sample_test.cpp)
-target_link_libraries(sample_test gtest_main sample)
+add_executable(cliquest_test cliquest_test.cpp)
+target_link_libraries(cliquest_test gtest_main system)
