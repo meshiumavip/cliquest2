@@ -15,7 +15,7 @@ typedef enum {
   DATA_TYPE_INT,
 } input_data_type_e;
 
-error_code_e game_main();
+error_code_e game_main(void);
 int32_t template_logger(char *filename, int32_t line, const char *funcname, char *str);
 void get_input_data(char *input_data, size_t size, input_data_type_e data_type);
 

@@ -34,4 +34,6 @@ void scene_game_start(void){
   CLI_PRINT("                                                     H        J)  ?p   .@            Tb      .Up      d~       #  .N.J[    .#     J)       M   4,");
   CLI_PRINT("                                                     H        J)   ?p  .@      .N.   .F .h.   .F      d~       #   .N([    .#     J)       M    W,");
   CLI_PRINT("                                                     ^        ?'    7' .^^^^^^!  7^^^=    ^^^^^       7^^^^^^  ^     ^^    .^     ?^^^^^^  ^     ^");
+  getchar();
+  CLI_PRINT(" ");
 }
