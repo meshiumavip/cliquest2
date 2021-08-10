@@ -1,9 +1,18 @@
 #include <stdint.h>
 #include <stdio.h>
+
 #include "system.h"
 #include "scene.h"
+#include "data_table.h"
+#include "cliquest_error.h"
 
-void scene_game_start(void){
+/*
+error_code_e cli_scene_xx(data_table_t *data_table){
+  return RC_SUCESS;
+}
+*/
+
+void cli_scene_game_start(int32_t *next_scene){
   CLI_PRINT(" ");
   CLI_PRINT(" ");
   CLI_PRINT("            ..Jggg+.,          ...                   ...                        ..(ggg&-,.           ....               ...      ...................        ..Jggg+..       .......................");
@@ -36,4 +45,9 @@ void scene_game_start(void){
   CLI_PRINT("                                                     ^        ?'    7' .^^^^^^!  7^^^=    ^^^^^       7^^^^^^  ^     ^^    .^     ?^^^^^^  ^     ^");
   getchar();
   CLI_PRINT(" ");
+  *next_scene = INPUT_SCENE;
+}
+
+error_code_e cli_scene_maou_castle(data_table_t *data_table){ 
+  return RC_SUCESS;
 }

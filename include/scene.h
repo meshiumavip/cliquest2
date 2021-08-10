@@ -4,13 +4,17 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "data_table.h"
+#include "cliquest_error.h"
+
 typedef enum {
-  TITLE_SCENE = 0,
-  INPUT_SCENE,
+  INPUT_SCENE = 0,
   SELECT_SCENE,
   NAME_INPUT_SCENE,
 } scene_e;
 
-void scene_game_start(void);
+error_code_e cli_scene_handler(void);
+void cli_scene_game_start(int32_t *next_scene);
+error_code_e cli_scene_maou_castle(data_table_t *data_table);
 
 #endif  // SCENE

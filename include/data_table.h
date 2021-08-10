@@ -139,7 +139,7 @@ typedef struct local_map {
   uint8_t* field;
 } local_map_t;
 
-typedef enum{
+typedef enum {
   CENTRAL = 0,
   NORTH_CITY,
   SOUTH_PORT,
@@ -147,17 +147,18 @@ typedef enum{
   WEST_DESERT,
   NORTH_MEADOW,
   CRISTAL_CAVE,
-}map_id_e;
+} map_id_e;
 
-typedef enum{
+typedef enum {
   CITY = 0,
   DUNGEON = 1,
-}map_type_e;
+} map_type_e;
 
 typedef struct data_table {
   player_info_t player_info;
   enemy_table_t enemy_table;
   local_map_t local_map;
+  int32_t next_scene;
 } data_table_t;
 
 #endif  // DATA_TABLE
