@@ -1,8 +1,9 @@
-#include <stdio.h>
 #include <stdint.h>
-#include "system.h"
+#include <stdio.h>
+
 #include "scene.h"
+#include "system.h"
 
 void main() {
-    game_main();
+  cli_scene_handler();
 }
