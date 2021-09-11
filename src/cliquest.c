@@ -4,4 +4,6 @@
 #include "scene.h"
 #include "system.h"
 
-void main() { cli_scene_handler(); }
+void main() {
+  cli_scene_handler();
+}

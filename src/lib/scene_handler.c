@@ -9,8 +9,21 @@
 
 error_code_e cli_scene_handler(void) {
   data_table_t data_table;
-  cli_scene_game_start(&(data_table.next_scene));
-  cli_init_player_data(&data_table);
-  cli_scene_maou_castle(&data_table);
+  data_table_t* dt = &data_table;
+  dt->next_scene = START_SCENE;
+  switch (dt->next_scene)
+  {
+  case START_SCENE:
+    cli_scene_game_start(dt);
+    cli_init_player_data(dt);
+    break;
+  case MAOU_CASTLE_SCENE:
+    cli_scene_maou_castle(dt);
+    break;
+  default:
+    template_log("Scene selection error.");
+    return INTERNAL_ERROR;
+    break;
+  }
   return RC_SUCESS;
 }

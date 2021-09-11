@@ -14,7 +14,7 @@ error_code_e cli_scene_xx(data_table_t *data_table){
 }
 */
 
-error_code_e cli_template_logger(char *filename, int32_t line, const char *funcname, char *str) {
+error_code_e cli_template_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
   FILE *file;
   if ((file = fopen("cliquest.log", "a")) == NULL) {
     printf("ファイルが開けませんでした");
@@ -25,14 +25,14 @@ error_code_e cli_template_logger(char *filename, int32_t line, const char *funcn
   return RC_SUCESS;
 }
 
-error_code_e cli_get_input_data(char *input_data, size_t size, input_data_type_e data_type) {
-  fgets(input_data, size, stdin);
+error_code_e cli_get_input_data(char *input, const size_t data_size, const input_data_type_e data_type) {
+  fgets(input, data_size, stdin);
   if (data_type == DATA_TYPE_INT) {
-    int32_t input_data_int = atoi(input_data);
+    int32_t input_data_int = atoi(input);
     printf("int :%d\n", input_data_int);
     return RC_SUCESS;
   }
-  printf("char :%s", input_data);
+  printf("char :%s", input);
   return RC_SUCESS;
 }
 

@@ -4,6 +4,12 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define ANY_INPUT_MAX 32
+#define PLAYER_NAME_MAX 32
+#define PLAYER_ITEM_MAX 20
+#define ITEM_DISCRIBE_MAX 128
+#define MAP_NAME_MAX 32
+
 // PLAYER
 typedef struct player_status {
   uint16_t MAX_HP;
@@ -31,13 +37,13 @@ typedef struct player_equipment {
 } player_equipment_t;
 
 typedef struct player_info {
-  char name[32];
+  char name[PLAYER_NAME_MAX];
   uint8_t global_location;
   uint8_t local_location;
   player_status_t player_status;
   player_status_buf_t player_status_buf;
   player_equipment_t player_equipment;
-  uint8_t item[20];
+  uint8_t item[PLAYER_ITEM_MAX];
 } player_info_t;
 
 // ENEMY
@@ -66,7 +72,7 @@ typedef struct enemy_status_buf {
 typedef struct enemy_table {
   uint8_t enemy_tire;
   uint8_t enemy_tag;
-  char name[32];
+  char name[PLAYER_NAME_MAX];
   enemy_status_t enemy_status;
   enemy_status_buf_t enemy_status_buf;
 } enemy_table_t;
@@ -92,7 +98,7 @@ typedef enum {
 
 // ITEM
 typedef enum {
-  HP_PORTION = 0,
+  HP_PORTION,
   MP_PORTION,
   IRON_SWORD,
   MITHRIL_SWORD,
@@ -103,11 +109,11 @@ typedef enum {
 } item_list_e;
 
 typedef enum {
+  TIRE0,
   TIRE1,
   TIRE2,
   TIRE3,
   TIRE4,
-  TIRE5,
 } tire_e;
 
 typedef enum {
@@ -121,8 +127,8 @@ typedef struct {
   uint8_t item_tire;
   uint8_t item_tag;
   uint8_t item_type;
-  char item_name[32];
-  char item_describe[128];
+  char item_name[PLAYER_NAME_MAX];
+  char item_describe[ITEM_DISCRIBE_MAX];
   uint16_t HP;
   uint16_t MP;
   uint8_t ATT;
@@ -133,14 +139,14 @@ typedef struct {
 
 // MAP
 typedef struct local_map {
-  char map_name[32];
+  char map_name[MAP_NAME_MAX];
   uint8_t map_tag;
   uint8_t map_type;
   uint8_t* field;
 } local_map_t;
 
 typedef enum {
-  CENTRAL = 0,
+  CENTRAL,
   NORTH_CITY,
   SOUTH_PORT,
   EAST_MOUNTAIN,
@@ -150,8 +156,8 @@ typedef enum {
 } map_id_e;
 
 typedef enum {
-  CITY = 0,
-  DUNGEON = 1,
+  CITY,
+  DUNGEON,
 } map_type_e;
 
 typedef struct data_table {

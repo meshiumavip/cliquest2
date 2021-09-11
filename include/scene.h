@@ -8,13 +8,12 @@
 #include "cliquest_error.h"
 
 typedef enum {
-  INPUT_SCENE = 0,
-  SELECT_SCENE,
-  NAME_INPUT_SCENE,
+  START_SCENE,
+  MAOU_CASTLE_SCENE,
 } scene_e;
 
 error_code_e cli_scene_handler(void);
-void cli_scene_game_start(int32_t *next_scene);
+void cli_scene_game_start(data_table_t *data_table);
 error_code_e cli_scene_maou_castle(data_table_t *data_table);
 
 #endif  // SCENE

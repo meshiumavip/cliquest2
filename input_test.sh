@@ -1,1 +1,1 @@
-cat ~/cliquest2/input_test.txt | ~/cliquest2/build/src/cliquest/cliquest 
+cat ~/cliquest2/input_test.txt | ~/cliquest2/build/src/cliquest
