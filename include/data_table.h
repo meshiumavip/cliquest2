@@ -6,6 +6,8 @@
 
 #define ANY_INPUT_MAX 32
 #define PLAYER_NAME_MAX 32
+#define ITEM_ID_MAX 255
+#define IITEM_NAME_MAX 32
 #define PLAYER_ITEM_MAX 20
 #define ITEM_DISCRIBE_MAX 128
 #define MAP_NAME_MAX 32
@@ -103,9 +105,19 @@ typedef enum {
   IRON_SWORD,
   MITHRIL_SWORD,
   CRYSTAL_SWORD,
+  DESTINY_SWORD,
+  WOOD_WAND,
+  SPRITE_WAND,
+  CRYSTAL_WAND,
+  TWILIGHT_WAND,
   LEATHRE_ARMOR,
   MITHRIL_ARMOR,
   CRYSTAL_ARMOR,
+  IMMORTAL_ARMOR,
+  WIZARD_ROBE,
+  SPRITE_ROBE,
+  HOLY_ROBE,
+  REINCARNATION_ROBE,
 } item_list_e;
 
 typedef enum {
@@ -124,10 +136,10 @@ typedef enum {
 } item_type_e;
 
 typedef struct {
+  uint8_t item_id;
   uint8_t item_tire;
-  uint8_t item_tag;
   uint8_t item_type;
-  char item_name[PLAYER_NAME_MAX];
+  char item_name[IITEM_NAME_MAX];
   char item_describe[ITEM_DISCRIBE_MAX];
   uint16_t HP;
   uint16_t MP;
@@ -163,6 +175,7 @@ typedef enum {
 typedef struct data_table {
   player_info_t player_info;
   enemy_table_t enemy_table;
+  item_info_t item_table[255];
   local_map_t local_map;
   int32_t next_scene;
 } data_table_t;

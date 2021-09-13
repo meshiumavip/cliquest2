@@ -10,6 +10,7 @@
 error_code_e cli_scene_handler(void) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
+  cli_create_item_table(dt->item_table);
   dt->next_scene = START_SCENE;
   switch (dt->next_scene)
   {
