@@ -1,5 +1,5 @@
-#ifndef SYSTEM
-#define SYSTEM
+#ifndef SYSTEM_H
+#define SYSTEM_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -20,5 +20,6 @@ error_code_e cli_create_item_table(item_info_t *item_table);
 error_code_e cli_get_input_data(char *input, const size_t data_size, const input_data_type_e data_type);
 error_code_e cli_equip_item(player_equipment_t *player_equipment, item_list_e equipment);
 error_code_e cli_init_player_data(data_table_t *data_table);
+error_code_e cli_main_menu(data_table_t *data_table);
 
-#endif  // SYSTEM
+#endif  // SYSTEM_H

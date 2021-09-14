@@ -7,13 +7,11 @@ extern "C" {
 #include "system.h"
 }
 
-/*
-#undef
-#define
+#undef CLI_PRINT
+#define CLI_PRINT(...) strlen(__VA_ARGS__)
 extern "C" {
-#include system.c
+#include "system.c"
 }
-*/
 
 class cli_system : public ::testing::Test {};
 TEST_F(cli_system, Test1) {
@@ -37,4 +35,10 @@ TEST_F(cli_system, Test4) {
   player_equipment_t pe;
   item_list_e e = MITHRIL_SWORD;
   EXPECT_EQ(RC_SUCESS, cli_equip_item(&pe, e));
+}
+
+TEST_F(cli_system, Test5) {
+  data_table_t data_table;
+  data_table_t* dt = &data_table;
+  EXPECT_EQ(RC_SUCESS, cli_init_player_data(dt));
 }

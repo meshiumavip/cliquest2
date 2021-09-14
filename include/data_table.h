@@ -1,5 +1,5 @@
-#ifndef DATA_TABLE
-#define DATA_TABLE
+#ifndef DATA_TABLE_H
+#define DATA_TABLE_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -141,12 +141,12 @@ typedef struct {
   uint8_t item_type;
   char item_name[IITEM_NAME_MAX];
   char item_describe[ITEM_DISCRIBE_MAX];
-  uint16_t HP;
-  uint16_t MP;
-  uint8_t ATT;
-  uint8_t DEF;
-  uint8_t WIS;
-  uint8_t SPD;
+  int32_t HP;
+  int32_t MP;
+  int32_t ATT;
+  int32_t DEF;
+  int32_t WIS;
+  int32_t SPD;
 } item_info_t;
 
 // MAP

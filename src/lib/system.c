@@ -29,10 +29,8 @@ error_code_e cli_get_input_data(char *input, const size_t data_size, const input
   fgets(input, data_size, stdin);
   if (data_type == DATA_TYPE_INT) {
     int32_t input_data_int = atoi(input);
-    printf("int :%d\n", input_data_int);
     return RC_SUCESS;
   }
-  printf("char :%s", input);
   return RC_SUCESS;
 }
 
@@ -56,7 +54,6 @@ error_code_e cli_create_item_table(item_info_t *item_table) {
       {SPRITE_ROBE, TIRE2, ARMOR, "妖精のローブ", "", 30, 45, 0, 15, 0, 15},
       {HOLY_ROBE, TIRE3, ARMOR, "聖なるローブ", "", 40, 60, 0, 20, 0, 20},
       {REINCARNATION_ROBE, TIRE4, ARMOR, "輪廻転生のローブ", "", 0, 100, -10, -10, 30, 30},
-      0
   };
   memcpy(item_table, i_t, sizeof(i_t));
   item_table = i_t;
@@ -94,10 +91,14 @@ error_code_e cli_init_player_data(data_table_t *data_table) {
   if (ret != RC_SUCESS) {
     return INTERNAL_ERROR;
   }
-  printf("名前を教えてください。：");
+  CLI_PRINT("名前を教えてください。：");
   ret = cli_get_input_data(player_info->name, sizeof(char) * PLAYER_NAME_MAX, DATA_TYPE_CHAR);
   if (ret != RC_SUCESS) {
     return INTERNAL_ERROR;
   }
+  return RC_SUCESS;
+}
+
+error_code_e cli_main_menu(data_table_t *data_table) {
   return RC_SUCESS;
 }
