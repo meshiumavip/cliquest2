@@ -16,10 +16,9 @@ typedef enum {
 } input_data_type_e;
 
 error_code_e cli_template_logger(const char *filename, const int32_t line, const char *funcname, const char *str);
-error_code_e cli_create_item_table(item_info_t *item_table);
-error_code_e cli_get_input_data(char *input, const size_t data_size, const input_data_type_e data_type);
-error_code_e cli_equip_item(player_equipment_t *player_equipment, item_list_e equipment);
-error_code_e cli_init_player_data(data_table_t *data_table);
-error_code_e cli_main_menu(data_table_t *data_table);
-
+error_code_e cli_create_item_table(item_t *ii_table);
+error_code_e cli_create_map_table(map_t *mi);
+error_code_e cli_get_input_data(char *str, int32_t *num, const size_t data_size, const input_data_type_e data_type);
+error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const item_type_e it);
+error_code_e cli_init_player_data(player_t *p_data);
 #endif  // SYSTEM_H
