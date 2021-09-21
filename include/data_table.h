@@ -106,10 +106,6 @@ typedef struct {
   scene_e next_s;
 } action_t;
 
-typedef struct{
-  scene_e next_s;
-}scene_handler_t;
-
 // PLAYER
 typedef struct player_status {
   uint16_t MAX_HP;

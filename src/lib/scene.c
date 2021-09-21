@@ -63,7 +63,11 @@ error_code_e cli_scene_prologue(data_table_t *dt) {
   return RC_SUCESS;
 }
 
-error_code_e cli_scene_main_menu(data_table_t *dt) {
+error_code_e cli_scene_maou_castle(data_table_t *dt) {
+  return RC_SUCESS;
+}
+
+error_code_e cli_action_menu_main(data_table_t *dt){
   char str[NAME_MAX];
   int32_t num;
   error_code_e rc = RC_SUCESS;
@@ -83,7 +87,18 @@ error_code_e cli_scene_main_menu(data_table_t *dt) {
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   return RC_SUCESS;
 }
+error_code_e cli_action_menu_global_map(data_table_t *dt){
 
-error_code_e cli_scene_maou_castle(data_table_t *dt) {
-  return RC_SUCESS;
+}
+error_code_e cli_action_menu_status(data_table_t *dt){
+
+}
+error_code_e cli_action_menu_item(data_table_t *dt){
+
+}
+error_code_e cli_action_menu_explorer(data_table_t *dt){
+
+}
+error_code_e cli_action_menu_move(data_table_t *dt){
+    
 }

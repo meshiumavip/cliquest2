@@ -4,8 +4,8 @@
 #include <string.h>
 #include "cliquest_error.h"
 #include "data_table.h"
-#include "scene.h"
 #include "system.h"
+#include "scene.h"
 
 static error_code_e cli_create_tabldes(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
@@ -24,33 +24,22 @@ error_code_e cli_scene_handler(void) {
   data_table_t *dt = &data_table;
   cli_create_tabldes(dt);
   dt->next_s = SCENE_GAME_START;
-  uint8_t loop = 1;
   uint8_t rc = RC_SUCESS;
   scene_handler_t handler[] = {
+      {SCENE_GAME_START, cli_scene_game_start},
+      {SCENE_PROLOGUE, cli_scene_prologue},
+      {SCENE_MAOU_CASTLE, cli_scene_maou_castle},
+      {ACTION_MENU_MAIN, cli_action_menu_main},
+      {ACTION_MENU_GLOBAL_MAP, cli_action_menu_global_map},
+      {ACTION_MENU_STATUS, cli_action_menu_status},
+      {ACTION_MENU_ITEM, cli_action_menu_item},
+      {ACTION_MENU_EXPLORER, cli_action_menu_explorer},
+      {ACTION_MENU_MOVE, cli_action_menu_move},
   };
-  while (loop) {
-    switch (dt->next_s) {
-      case SCENE_GAME_START:
-        rc = cli_scene_game_start(dt);
-        CLI_ERROR(rc = RC_INTERNAL_ERROR)
-        break;
-      case SCENE_PROLOGUE:
-        rc = cli_scene_prologue(dt);
-        CLI_ERROR(rc = RC_INTERNAL_ERROR)
-        loop = 0;
-        break;
-      case ACTION_MENU_MAIN:
-        cli_scene_main_menu(dt);
-        break;
-      case SCENE_MAOU_CASTLE:
-        cli_scene_maou_castle(dt);
-        break;
-      default:
-        CLI_LOG("Scene selection error.");
-        loop = 0;
-        return RC_INTERNAL_ERROR;
-        break;
-    }
+
+  for(int32_t i = 0; rc != RC_SUCESS; i++){
+    rc = handler[dt->next_s].scene(dt);
+    CLI_ERROR(rc == RC_INTERNAL_ERROR)
   }
   return RC_SUCESS;
 }
