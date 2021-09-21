@@ -8,8 +8,6 @@ extern "C" {
 #include "system.h"
 }
 
-#undef CLI_PRINT
-#define CLI_PRINT(...) strlen(__VA_ARGS__)
 extern "C" {
 #include "scene.c"
 }
@@ -19,5 +17,5 @@ TEST_F(cli_system, Test1) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
   cli_scene_game_start(dt);
-  EXPECT_EQ(MAIN_MENU, dt->next_s);
+  EXPECT_EQ(SCENE_PROLOGUE, dt->next_s);
 }

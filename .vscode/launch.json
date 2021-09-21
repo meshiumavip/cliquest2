@@ -21,7 +21,7 @@
       "preLaunchTask": "build",
     },
     {
-      "name": "clisystemUT",
+      "name": "clisceneUT",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/test/clisceneUT",

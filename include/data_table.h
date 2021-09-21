@@ -4,14 +4,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define ANY_INPUT_MAX 32
-#define PLAYER_NAME_MAX 32
-#define ITEM_ID_MAX 255
-#define IITEM_NAME_MAX 32
+#define NAME_MAX 32
+#define ID_MAX 255
 #define PLAYER_ITEM_MAX 20
 #define ITEM_DISCRIBE_MAX 128
-#define MAP_NAME_MAX 32
-#define LOCAL_MAP_MAX 255
+
 // MAP
 typedef enum {
   GLOBAL_MAP = 0,
@@ -32,7 +29,7 @@ typedef enum {
 } map_type_e;
 
 typedef struct {
-  char name[255];
+  char name[NAME_MAX];
   global_location_e gl;
   map_type_e mt;
   uint8_t map_field[10][11];
@@ -79,7 +76,7 @@ typedef struct {
   item_list_e il;
   tire_e tire;
   item_type_e it;
-  char item_name[IITEM_NAME_MAX];
+  char item_name[NAME_MAX];
   char item_describe[ITEM_DISCRIBE_MAX];
   int32_t HP;
   int32_t MP;
@@ -91,10 +88,27 @@ typedef struct {
 
 // SCENE
 typedef enum {
-  START_SCENE,
-  MAIN_MENU,
-  MAOU_CASTLE_SCENE,
+  SCENE_GAME_START,
+  SCENE_PROLOGUE,
+  SCENE_MAOU_CASTLE,
+  ACTION_MENU_MAIN,
+  ACTION_MENU_GLOBAL_MAP,
+  ACTION_MENU_LOACL_MAP,
+  ACTION_MENU_STATUS,
+  ACTION_MENU_ITEM,
+  ACTION_MENU_EXPLORER,
+  ACTION_MENU_MOVE,
 } scene_e;
+
+typedef struct {
+  uint8_t num;
+  char str[NAME_MAX];
+  scene_e next_s;
+} action_t;
+
+typedef struct{
+  scene_e next_s;
+}scene_handler_t;
 
 // PLAYER
 typedef struct player_status {
@@ -123,7 +137,7 @@ typedef struct player_equipment {
 } player_equipment_t;
 
 typedef struct player {
-  char name[PLAYER_NAME_MAX];
+  char name[NAME_MAX];
   global_location_e gl;
   uint8_t local_location;
   player_status_t ps;
@@ -158,7 +172,7 @@ typedef struct enemy_status_buf {
 typedef struct enemy {
   uint8_t enemy_tire;
   uint8_t enemy_tag;
-  char name[PLAYER_NAME_MAX];
+  char name[NAME_MAX];
   enemy_status_t enemy_status;
   enemy_status_buf_t enemy_status_buf;
 } enemy_t;
@@ -183,13 +197,18 @@ typedef enum {
 } enemy_e;
 
 // DataTable
+typedef enum {
+  DATA_TYPE_CHAR = 0,
+  DATA_TYPE_INT,
+} input_data_type_e;
+
 typedef struct data_table {
   player_t p_data;
   enemy_t e_table;
-  item_t i_table[ITEM_ID_MAX];
+  item_t i_table[ID_MAX];
   map_t m_table[8];
   global_location_e gl;
-  uint8_t local_map[LOCAL_MAP_MAX];
+  uint8_t local_map[ID_MAX];
   scene_e next_s;
 } data_table_t;
 

@@ -19,8 +19,9 @@ typedef struct menu_select {
 } menu_select_t;
 
 error_code_e cli_scene_handler(void);
-void cli_scene_game_start(data_table_t *dt);
-void cli_scene_maou_castle(data_table_t *dt);
-void cli_scene_main_menu(data_table_t *dt);
+error_code_e cli_scene_game_start(data_table_t *dt);
+error_code_e cli_scene_prologue(data_table_t *dt);
+error_code_e cli_scene_maou_castle(data_table_t *dt);
+error_code_e cli_scene_main_menu(data_table_t *dt);
 
 #endif //SCENE_H

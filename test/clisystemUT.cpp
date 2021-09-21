@@ -7,15 +7,15 @@ extern "C" {
 #include "system.h"
 }
 
-#undef CLI_PRINT
-#define CLI_PRINT(...) strlen(__VA_ARGS__)
+
 extern "C" {
 #include "system.c"
 }
 
 class cli_system : public ::testing::Test {};
 TEST_F(cli_system, Test1) {
-  EXPECT_EQ(RC_SUCESS, cli_template_logger("filename", 123, "funcname", "test"));
+  error_code_e rc = CLI_LOG("test")
+  EXPECT_EQ(RC_SUCESS, rc);
 }
 
 TEST_F(cli_system, Test2) {
@@ -25,7 +25,6 @@ TEST_F(cli_system, Test2) {
   EXPECT_STREQ("HPポーション", dt->i_table[HP_PORTION].item_name);
   EXPECT_STREQ("輪廻転生のローブ", dt->i_table[REINCARNATION_ROBE].item_name);
 }
-
 
 TEST_F(cli_system, Test3) {
   data_table_t data_table;

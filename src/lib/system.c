@@ -14,7 +14,7 @@ error_code_e cli_scene_xx(data_table_t *data_table){
 }
 */
 
-error_code_e cli_template_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
+error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
   FILE *file;
   if ((file = fopen("cliquest.log", "a")) == NULL) {
     printf("ファイルが開けませんでした");
@@ -26,7 +26,7 @@ error_code_e cli_template_logger(const char *filename, const int32_t line, const
 }
 
 error_code_e cli_create_item_table(item_t *i_table) {
-  item_t item_table[ITEM_ID_MAX] = {
+  item_t item_table[] = {
       {HP_PORTION, TIRE0, NORMAL_ITEM, "HPポーション", "HPを50回復する", 50, 0, 0, 0, 0, 0},
       {MP_PORTION, TIRE0, NORMAL_ITEM, "MPポーション", "MPを50回復する", 0, 50, 0, 0, 0, 0},
       {IRON_SWORD, TIRE1, WEAPON, "鉄の剣", "", 0, 0, 10, 0, 0, 10},
@@ -58,8 +58,9 @@ error_code_e cli_create_map_table(map_t *m_table) {
   uint8_t WD = WEST_DESERT;
   uint8_t NM = NORTH_MEADOW;
   uint8_t CC = CRISTAL_CAVE;
-  map_t map_table[8] = {
-    {"世界地図", GLOBAL_MAP, GLOBAL,{
+  map_t map_table[] = {
+    {"世界地図", GLOBAL_MAP, GLOBAL,
+      {
         {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , NM, 9},
         {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 1 , 9},
         {0 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 1 , 9},
@@ -80,15 +81,14 @@ error_code_e cli_create_map_table(map_t *m_table) {
     {"北の草原", NORTH_MEADOW, DUNGEON, },
     {"クリスタルの洞窟", CRISTAL_CAVE, DUNGEON, },
   };
-  
-  memcpy(m_table, map_table, sizeof(map_t)*8);
+
+  memcpy(m_table, map_table, sizeof(map_table));
   return RC_SUCESS;
 }
 
-
-static error_code_e lntrim(char *str, const size_t data_size){
-  for(int32_t i = 0; i < data_size ; i++){
-    if (str[i] == '\n'){
+static error_code_e lntrim(char *str, const size_t data_size) {
+  for (int32_t i = 0; i < data_size; i++) {
+    if (str[i] == '\n') {
       str[i] = '\0';
       return RC_SUCESS;
     }
@@ -107,10 +107,10 @@ error_code_e cli_get_input_data(char *str, int32_t *num, const size_t data_size,
 }
 
 error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const item_type_e it) {
-  if (it == ARMOR){
+  if (it == ARMOR) {
     pe->armor = il;
   }
-  if (it == WEAPON){
+  if (it == WEAPON) {
     pe->weapon = il;
   }
   return RC_SUCESS;
@@ -142,51 +142,9 @@ error_code_e cli_init_player_data(player_t *p_data) {
     return RC_INTERNAL_ERROR;
   }
   CLI_PRINT("名前を教えてください。：");
-  ret = cli_get_input_data(p_data->name, NULL, sizeof(char) * PLAYER_NAME_MAX, DATA_TYPE_CHAR);
+  ret = cli_get_input_data(p_data->name, NULL, sizeof(char) * NAME_MAX, DATA_TYPE_CHAR);
   if (ret != RC_SUCESS) {
     return RC_INTERNAL_ERROR;
   }
   return RC_SUCESS;
-  }
-
-/*
-error_code_e cli_scene_view(list_t *list){
-    LOG("");
-    for(int32_t i =0; i<20 ;i++){
-        if(list[i].value == -1){
-            break;
-        }
-        PRINT("%d: %s", list[i].value, list[i].key);
-    }
 }
-
-error_code_e cli_scene_selector(list_t *list, int32_t list_max, player_t *player){
-    LOG("");
-    int32_t ret = ERROR_SUCCESS;
-    int32_t num;
-    char *str;
-    scene_input(&num, list_max, list);
-    ret = list[num-1].next_scene(player);
-    DEBUG("");PRINT(" ret %d");
-    return ret;
-}
-
-error_code_e cli_scene_input(int32_t *num, int32_t list_max, list_t *list){
-    LOG("");
-    char str[4];//正常値は２桁＋入力時の改行＋終端文字＝４byte、5byte以上は不正
-        while(1){
-            PRINT("---------------------------");
-            printf("入力：");
-            fgets(str, sizeof(str), stdin);
-            PRINT("\n");
-            if(str[strlen(str)-1] != '\n' ){while( getchar() != '\n');} //stdinに残った5byte以降の文字を回収
-            if(strlen(str) == 1){scene_view(list); continue;}; //未入力チェック
-            *num=atoi(str);
-            if(*num == 0){scene_view(list); continue;} //文字列を除外
-            if(0 <= *num && *num <= list_max){
-                break;
-            }
-            scene_view(list);
-        }
-}
-*/
