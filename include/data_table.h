@@ -193,11 +193,6 @@ typedef enum {
 } enemy_e;
 
 // DataTable
-typedef enum {
-  DATA_TYPE_CHAR = 0,
-  DATA_TYPE_INT,
-} input_data_type_e;
-
 typedef struct data_table {
   player_t p_data;
   enemy_t e_table;

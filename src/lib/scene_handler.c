@@ -4,8 +4,8 @@
 #include <string.h>
 #include "cliquest_error.h"
 #include "data_table.h"
-#include "system.h"
 #include "scene.h"
+#include "system.h"
 
 static error_code_e cli_create_tabldes(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
@@ -37,7 +37,7 @@ error_code_e cli_scene_handler(void) {
       {ACTION_MENU_MOVE, cli_action_menu_move},
   };
 
-  for(int32_t i = 0; rc != RC_SUCESS; i++){
+  for (int32_t i = 0; rc != RC_SUCESS; i++) {
     rc = handler[dt->next_s].scene(dt);
     CLI_ERROR(rc == RC_INTERNAL_ERROR)
   }

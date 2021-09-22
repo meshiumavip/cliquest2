@@ -81,8 +81,7 @@ error_code_e cli_create_map_table(map_t *m_table) {
     {"北の草原", NORTH_MEADOW, DUNGEON, },
     {"クリスタルの洞窟", CRISTAL_CAVE, DUNGEON, },
   };
-
-  memcpy(m_table, map_table, sizeof(map_table));
+    memcpy(m_table, map_table, sizeof(map_table));
   return RC_SUCESS;
 }
 
@@ -96,15 +95,72 @@ static error_code_e lntrim(char *str, const size_t data_size) {
   return RC_INTERNAL_ERROR;
 };
 
-error_code_e cli_get_input_data(char *str, int32_t *num, const size_t data_size, const input_data_type_e data_type) {
-  fgets(str, data_size, stdin);
-  lntrim(str, data_size);
-  if (data_type == DATA_TYPE_INT) {
-    *num = atoi(str);
-    return RC_SUCESS;
+error_code_e cli_get_input_num(const char *msg, int32_t *num) {
+  char buf[NAME_MAX];
+  while (1) {
+    if(msg != NULL){
+      CLI_PRINT("%s", msg)
+    }
+    if (fgets(buf, NAME_MAX, stdin) == NULL) {
+      CLI_PRINT("入力値が不正です。1")
+      continue;
+    }
+    if (buf[0] == '\n'){
+      CLI_PRINT("入力値が不正です。2")
+      continue;
+    }
+    lntrim(buf, NAME_MAX);
+    *num = atoi(buf);
+    if (*num == 0) {
+      CLI_PRINT("数値を入力してください。")
+      continue;
+    }
+    break;
   }
   return RC_SUCESS;
 }
+
+error_code_e cli_get_input_str(const char *msg, const size_t data_size, char *buf) {
+  while (1) {
+    if(msg != NULL){
+      CLI_PRINT("%s", msg)
+    }
+    if (fgets(buf, data_size, stdin) == NULL) {
+      CLI_PRINT("入力値が不正です。3")
+      continue;
+    }
+    if (buf[0] == '\n'){
+      CLI_PRINT("入力値が不正です。4")
+      continue;
+    }
+    break;
+  }
+  lntrim(buf, data_size);
+  return RC_SUCESS;
+}
+
+error_code_e cli_get_input_action(const uint8_t actions, uint8_t *num){
+  char buf[NAME_MAX];
+  while (1) {
+    if (fgets(buf, NAME_MAX, stdin) == NULL) {
+      CLI_PRINT("入力値が不正です。5")
+      continue;
+    }
+    if (buf[0] == '\n'){
+      CLI_PRINT("入力値が不正です。6")
+      continue;
+    }
+    lntrim(buf, NAME_MAX);
+    *num = atoi(buf);
+    if (*num == 0) {
+      CLI_PRINT("数値を入力してください。")
+      continue;
+    }
+    break;
+  }
+  return RC_SUCESS;
+}
+
 
 error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const item_type_e it) {
   if (it == ARMOR) {
@@ -141,8 +197,7 @@ error_code_e cli_init_player_data(player_t *p_data) {
   if (ret != RC_SUCESS) {
     return RC_INTERNAL_ERROR;
   }
-  CLI_PRINT("名前を教えてください。：");
-  ret = cli_get_input_data(p_data->name, NULL, sizeof(char) * NAME_MAX, DATA_TYPE_CHAR);
+  ret = cli_get_input_str("名前を教えてください。：",sizeof(char) * NAME_MAX,  p_data->name);
   if (ret != RC_SUCESS) {
     return RC_INTERNAL_ERROR;
   }

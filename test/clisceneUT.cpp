@@ -12,8 +12,8 @@ extern "C" {
 #include "scene.c"
 }
 
-class cli_system : public ::testing::Test {};
-TEST_F(cli_system, Test1) {
+class cli_scene : public ::testing::Test {};
+TEST_F(cli_scene, Test1) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
   cli_scene_game_start(dt);

@@ -6,26 +6,23 @@
 #include "scene.h"
 #include "system.h"
 
-/*
-error_code_e cli_scene_xx(data_table_t *data_table){
-  return RC_SUCESS;
-}
-*/
-
-static void cli_display_actions(action_t *action, int32_t size) {
+static void cli_display_actions(const uint8_t options, action_t *action) {
   CLI_PRINT("----------------------------------------");
-  for (int32_t i = 0; i < size; i++) {
+  for (int32_t i = 0; i < options; i++) {
     CLI_PRINT("%d: %s", i + 1, action[i].str);
   }
 }
 
-/*
-advenger
-*/
 error_code_e cli_scene_game_start(data_table_t *dt) {
-  char str[NAME_MAX];
-  int32_t num;
+  char buf[NAME_MAX];
+  uint8_t num = 0;
   error_code_e rc = RC_SUCESS;
+  action_t action[] = {
+      {1, "さいしょから", SCENE_PROLOGUE},
+      {2, "つづきから", ACTION_MENU_MAIN},
+  };
+  uint8_t options = sizeof(action)/sizeof(action_t);
+
   CLI_PRINT(" ")
   CLI_PRINT(" ")
   CLI_PRINT("  ####   ####      ######             ###    ##   ##  #######   #####    # #####")
@@ -38,18 +35,13 @@ error_code_e cli_scene_game_start(data_table_t *dt) {
   CLI_PRINT("                                         ##")
   CLI_PRINT(" ")
   CLI_PRINT("                                   PRESS ENTER")
-
-  rc = cli_get_input_data(str, NULL, sizeof(char) * NAME_MAX, DATA_TYPE_CHAR);
-  CLI_ERROR(rc == RC_INTERNAL_ERROR)
   CLI_PRINT(" ")
-  action_t action[2] = {
-      {1, "さいしょから", SCENE_PROLOGUE},
-      {2, "つづきから", ACTION_MENU_MAIN},
-  };
-  cli_display_actions(action, 2);
-  rc = cli_get_input_data(str, &num, sizeof(char) * NAME_MAX, DATA_TYPE_INT);
+  fgets(buf, sizeof(buf), stdin);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  CLI_ERROR(num <= 0)
+
+  cli_display_actions(options, action);
+  rc = cli_get_input_action(options, &num);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
   dt->next_s = action[num - 1].next_s;
   return RC_SUCESS;
 }
@@ -67,11 +59,10 @@ error_code_e cli_scene_maou_castle(data_table_t *dt) {
   return RC_SUCESS;
 }
 
-error_code_e cli_action_menu_main(data_table_t *dt){
-  char str[NAME_MAX];
-  int32_t num;
+error_code_e cli_action_menu_main(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
-  uint8_t size = 6;
+  char str[NAME_MAX];
+  uint8_t num;
   action_t action[] = {
       {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
       {2, "ダンジョン地図", ACTION_MENU_LOACL_MAP},
@@ -80,25 +71,37 @@ error_code_e cli_action_menu_main(data_table_t *dt){
       {5, "探索", ACTION_MENU_EXPLORER},
       {6, "移動", ACTION_MENU_MOVE},
   };
-  cli_display_actions(action, size);
+  uint8_t options = sizeof(action)/sizeof(action_t);
+  cli_display_actions(options, action);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  rc = cli_get_input_data(str, &num, sizeof(char) * NAME_MAX, DATA_TYPE_CHAR);
-  CLI_ERROR(num < size)
+  rc = cli_get_input_action(options, &num);
+  CLI_ERROR(num > options)
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  dt->next_s = action[num - 1].next_s;
   return RC_SUCESS;
 }
-error_code_e cli_action_menu_global_map(data_table_t *dt){
 
+error_code_e cli_action_menu_global_map(data_table_t *dt) {
+  CLI_PRINT("TBD")
+  return RC_SUCESS;
 }
-error_code_e cli_action_menu_status(data_table_t *dt){
 
+error_code_e cli_action_menu_status(data_table_t *dt) {
+  CLI_PRINT("TBD")
+  return RC_SUCESS;
 }
-error_code_e cli_action_menu_item(data_table_t *dt){
 
+error_code_e cli_action_menu_item(data_table_t *dt) {
+  CLI_PRINT("TBD")
+  return RC_SUCESS;
 }
-error_code_e cli_action_menu_explorer(data_table_t *dt){
 
+error_code_e cli_action_menu_explorer(data_table_t *dt) {
+  CLI_PRINT("TBD")
+  return RC_SUCESS;
 }
-error_code_e cli_action_menu_move(data_table_t *dt){
-    
+
+error_code_e cli_action_menu_move(data_table_t *dt) {
+  CLI_PRINT("TBD")
+  return RC_SUCESS;
 }

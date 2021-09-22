@@ -27,7 +27,9 @@ typedef struct{
 error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str);
 error_code_e cli_create_item_table(item_t *ii_table);
 error_code_e cli_create_map_table(map_t *mi);
-error_code_e cli_get_input_data(char *str, int32_t *num, const size_t data_size, const input_data_type_e data_type);
+error_code_e cli_get_input_num(const char *msg, int32_t *num);
+error_code_e cli_get_input_str(const char *msg, const size_t data_size, char *buf);
+error_code_e cli_get_input_action(const uint8_t options, uint8_t *num);
 error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const item_type_e it);
 error_code_e cli_init_player_data(player_t *p_data);
 #endif  // SYSTEM_H

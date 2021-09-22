@@ -7,15 +7,13 @@ extern "C" {
 #include "system.h"
 }
 
-
 extern "C" {
 #include "system.c"
 }
 
 class cli_system : public ::testing::Test {};
 TEST_F(cli_system, Test1) {
-  error_code_e rc = CLI_LOG("test")
-  EXPECT_EQ(RC_SUCESS, rc);
+  error_code_e rc = CLI_LOG("test") EXPECT_EQ(RC_SUCESS, rc);
 }
 
 TEST_F(cli_system, Test2) {
@@ -29,7 +27,7 @@ TEST_F(cli_system, Test2) {
 TEST_F(cli_system, Test3) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
-  map_t *mt = dt->m_table;
+  map_t* mt = dt->m_table;
   EXPECT_EQ(RC_SUCESS, cli_create_map_table(mt));
   EXPECT_STREQ("世界地図", mt[0].name);
   EXPECT_STREQ("クリスタルの洞窟", mt[7].name);
@@ -38,12 +36,30 @@ TEST_F(cli_system, Test3) {
 }
 
 TEST_F(cli_system, Test4) {
-  char str[32];
-  int32_t num;
-  EXPECT_EQ(RC_SUCESS, cli_get_input_data(str, NULL, sizeof(char) * 32, DATA_TYPE_CHAR));
-  EXPECT_STREQ("name", str);
-  EXPECT_EQ(RC_SUCESS, cli_get_input_data(str, &num, sizeof(char) * 32, DATA_TYPE_INT));
+  char buf[NAME_MAX];
+  EXPECT_EQ(RC_SUCESS, cli_get_input_str("Test4", sizeof(buf), buf));
+  EXPECT_STREQ("name", buf);
+}
+
+TEST_F(cli_system, Test4_2) {
+  int32_t num=0;
+  EXPECT_EQ(RC_SUCESS, cli_get_input_num("Test4_2", &num));
   EXPECT_EQ(100, num);
+}
+
+TEST_F(cli_system, Test4_3) {
+  uint8_t num = 0;
+  action_t action[] = {
+      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
+      {2, "ダンジョン地図", ACTION_MENU_LOACL_MAP},
+      {3, "ステータス", ACTION_MENU_STATUS},
+      {4, "アイテム", ACTION_MENU_ITEM},
+      {5, "探索", ACTION_MENU_EXPLORER},
+      {6, "移動", ACTION_MENU_MOVE},
+  };
+  uint8_t options = sizeof(action)/sizeof(action_t);
+  EXPECT_EQ(RC_SUCESS, cli_get_input_action(options, &num));
+  EXPECT_EQ(6, num);
 }
 
 TEST_F(cli_system, Test5) {
