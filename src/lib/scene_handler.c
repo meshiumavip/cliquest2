@@ -31,13 +31,14 @@ error_code_e cli_scene_handler(void) {
       {SCENE_MAOU_CASTLE, cli_scene_maou_castle},
       {ACTION_MENU_MAIN, cli_action_menu_main},
       {ACTION_MENU_GLOBAL_MAP, cli_action_menu_global_map},
+      {ACTION_MENU_LOACL_MAP, cli_action_menu_local_map},
       {ACTION_MENU_STATUS, cli_action_menu_status},
       {ACTION_MENU_ITEM, cli_action_menu_item},
       {ACTION_MENU_EXPLORER, cli_action_menu_explorer},
       {ACTION_MENU_MOVE, cli_action_menu_move},
   };
 
-  for (int32_t i = 0; rc != RC_SUCESS; i++) {
+  while (rc == RC_SUCESS) {
     rc = handler[dt->next_s].scene(dt);
     CLI_ERROR(rc == RC_INTERNAL_ERROR)
   }

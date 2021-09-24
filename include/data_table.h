@@ -6,6 +6,7 @@
 
 #define NAME_MAX 32
 #define ID_MAX 255
+#define PRINT_MAX 255
 #define PLAYER_ITEM_MAX 20
 #define ITEM_DISCRIBE_MAX 128
 

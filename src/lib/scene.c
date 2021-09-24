@@ -13,32 +13,25 @@ static void cli_display_actions(const uint8_t options, action_t *action) {
   }
 }
 
+error_code_e cli_print_text(char file[PRINT_MAX]){
+  char str[PRINT_MAX];
+  FILE *fp = fopen(file, "r");
+  while ( fgets(str, sizeof(str), fp) != NULL) {
+    printf("%s", str);
+  }
+  fclose(fp);
+}
+
 error_code_e cli_scene_game_start(data_table_t *dt) {
-  char buf[NAME_MAX];
   uint8_t num = 0;
+  char file[PRINT_MAX] = "/home/wsl/cliquest2/text/title.txt";
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
       {1, "さいしょから", SCENE_PROLOGUE},
       {2, "つづきから", ACTION_MENU_MAIN},
   };
-  uint8_t options = sizeof(action)/sizeof(action_t);
-
-  CLI_PRINT(" ")
-  CLI_PRINT(" ")
-  CLI_PRINT("  ####   ####      ######             ###    ##   ##  #######   #####    # #####")
-  CLI_PRINT(" ##  ##   ##         ##              ## ##   ##   ##   ##   #  ##   ##  ## ## ##")
-  CLI_PRINT("##        ##         ##             ##   ##  ##   ##   ##      ##          ##")
-  CLI_PRINT("##        ##         ##             ##   ##  ##   ##   ####     #####      ##")
-  CLI_PRINT("##        ##         ##             ##   ##  ##   ##   ##           ##     ##")
-  CLI_PRINT(" ##  ##   ##  ##     ##              ## ##   ##   ##   ##   #  ##   ##     ##")
-  CLI_PRINT("  ####   #######   ######             ####    #####   #######   #####     ####")
-  CLI_PRINT("                                         ##")
-  CLI_PRINT(" ")
-  CLI_PRINT("                                   PRESS ENTER")
-  CLI_PRINT(" ")
-  fgets(buf, sizeof(buf), stdin);
-  CLI_ERROR(rc == RC_INTERNAL_ERROR)
-
+  uint8_t options = sizeof(action) / sizeof(action_t);
+  cli_print_text(file);
   cli_display_actions(options, action);
   rc = cli_get_input_action(options, &num);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
@@ -71,7 +64,7 @@ error_code_e cli_action_menu_main(data_table_t *dt) {
       {5, "探索", ACTION_MENU_EXPLORER},
       {6, "移動", ACTION_MENU_MOVE},
   };
-  uint8_t options = sizeof(action)/sizeof(action_t);
+  uint8_t options = sizeof(action) / sizeof(action_t);
   cli_display_actions(options, action);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   rc = cli_get_input_action(options, &num);
@@ -83,25 +76,30 @@ error_code_e cli_action_menu_main(data_table_t *dt) {
 
 error_code_e cli_action_menu_global_map(data_table_t *dt) {
   CLI_PRINT("TBD")
-  return RC_SUCESS;
+  return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_action_menu_local_map(data_table_t *dt) {
+  CLI_PRINT("TBD")
+  return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_action_menu_status(data_table_t *dt) {
   CLI_PRINT("TBD")
-  return RC_SUCESS;
+  return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_action_menu_item(data_table_t *dt) {
   CLI_PRINT("TBD")
-  return RC_SUCESS;
+  return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_action_menu_explorer(data_table_t *dt) {
   CLI_PRINT("TBD")
-  return RC_SUCESS;
+  return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_action_menu_move(data_table_t *dt) {
   CLI_PRINT("TBD")
-  return RC_SUCESS;
+  return RC_INTERNAL_ERROR;
 }
