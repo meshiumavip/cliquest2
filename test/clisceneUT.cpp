@@ -16,6 +16,7 @@ class cli_scene : public ::testing::Test {};
 TEST_F(cli_scene, Test1) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
+  strcpy(dt->p_data.name, "kana");
   cli_scene_game_start(dt);
   EXPECT_EQ(SCENE_PROLOGUE, dt->next_s);
 }

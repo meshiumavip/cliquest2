@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "cliquest_error.h"
 #include "data_table.h"
@@ -13,25 +14,53 @@ static void cli_display_actions(const uint8_t options, action_t *action) {
   }
 }
 
-error_code_e cli_print_text(char file[PRINT_MAX]){
+static error_code_e cli_replace_text(char *buf, const char *old, const char *rep)
+{
+  CLI_ERROR(buf == NULL)
+  CLI_ERROR(old == NULL)
+  CLI_ERROR(rep == NULL)
+  char tmp[1024];
+  char *p;
+
+/*
+ buf old ...
+ buf \0 old ...
+ buf \0 old tmp
+ buf new tmp
+*/
+  while ((p = strstr(buf, old)) != NULL) {
+    *p = '\0';
+    p += strlen(old);
+    strcpy(tmp, p);
+    strcat(buf, rep);
+    strcat(buf, tmp);
+  }
+  return RC_SUCESS;
+}
+
+static error_code_e cli_print_text(char file[], char* name) {
   char str[PRINT_MAX];
   FILE *fp = fopen(file, "r");
-  while ( fgets(str, sizeof(str), fp) != NULL) {
+  CLI_ERROR(fp == NULL)
+  while (fgets(str, sizeof(str), fp) != NULL) {
+    cli_replace_text(str, "ユーザ名", name);
     printf("%s", str);
   }
   fclose(fp);
+  return RC_SUCESS;
 }
 
 error_code_e cli_scene_game_start(data_table_t *dt) {
   uint8_t num = 0;
-  char file[PRINT_MAX] = "/home/wsl/cliquest2/text/title.txt";
+  char file[] = "/home/wsl/cliquest2/text/title.txt";
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
       {1, "さいしょから", SCENE_PROLOGUE},
       {2, "つづきから", ACTION_MENU_MAIN},
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
-  cli_print_text(file);
+
+  cli_print_text(file, dt->p_data.name);
   cli_display_actions(options, action);
   rc = cli_get_input_action(options, &num);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
@@ -42,7 +71,8 @@ error_code_e cli_scene_game_start(data_table_t *dt) {
 error_code_e cli_scene_prologue(data_table_t *dt) {
   uint8_t rc = RC_SUCESS;
   rc = cli_init_player_data(&(dt->p_data));
-  CLI_PRINT("%sの冒険が始まる...", dt->p_data.name)
+  char file[] = "/home/wsl/cliquest2/text/prologue.txt";
+  cli_print_text(file, dt->p_data.name);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   dt->next_s = ACTION_MENU_MAIN;
   return RC_SUCESS;
