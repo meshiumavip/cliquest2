@@ -100,19 +100,23 @@ error_code_e cli_get_input_num(const char *msg, int32_t *num) {
   while (1) {
     if(msg != NULL){
       CLI_PRINT("%s", msg)
+      printf(">");
     }
     if (fgets(buf, NAME_MAX, stdin) == NULL) {
       CLI_PRINT("入力値が不正です。1")
+      printf(">");
       continue;
     }
     if (buf[0] == '\n'){
       CLI_PRINT("入力値が不正です。2")
+      printf(">");
       continue;
     }
     lntrim(buf, NAME_MAX);
     *num = atoi(buf);
     if (*num == 0) {
       CLI_PRINT("数値を入力してください。")
+      printf(">");
       continue;
     }
     break;
@@ -124,13 +128,16 @@ error_code_e cli_get_input_str(const char *msg, const size_t data_size, char *bu
   while (1) {
     if(msg != NULL){
       CLI_PRINT("%s", msg)
+      printf(">");
     }
     if (fgets(buf, data_size, stdin) == NULL) {
       CLI_PRINT("入力値が不正です。3")
+      printf(">");
       continue;
     }
     if (buf[0] == '\n'){
       CLI_PRINT("入力値が不正です。4")
+      printf(">");
       continue;
     }
     break;
@@ -144,16 +151,19 @@ error_code_e cli_get_input_action(const uint8_t actions, uint8_t *num){
   while (1) {
     if (fgets(buf, NAME_MAX, stdin) == NULL) {
       CLI_PRINT("入力値が不正です。5")
+      printf(">");
       continue;
     }
     if (buf[0] == '\n'){
       CLI_PRINT("入力値が不正です。6")
+      printf(">");
       continue;
     }
     lntrim(buf, NAME_MAX);
     *num = atoi(buf);
     if (*num == 0) {
       CLI_PRINT("数値を入力してください。")
+      printf(">");
       continue;
     }
     break;
@@ -197,7 +207,8 @@ error_code_e cli_init_player_data(player_t *p_data) {
   if (ret != RC_SUCESS) {
     return RC_INTERNAL_ERROR;
   }
-  ret = cli_get_input_str("名前を教えてください。：",sizeof(char) * NAME_MAX,  p_data->name);
+  ret = cli_get_input_str("名前を教えてください。",sizeof(char) * NAME_MAX,  p_data->name);
+  system("clear");
   if (ret != RC_SUCESS) {
     return RC_INTERNAL_ERROR;
   }

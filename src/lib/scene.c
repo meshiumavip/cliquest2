@@ -1,5 +1,7 @@
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "cliquest_error.h"
@@ -12,22 +14,23 @@ static void cli_display_actions(const uint8_t options, action_t *action) {
   for (int32_t i = 0; i < options; i++) {
     CLI_PRINT("%d: %s", i + 1, action[i].str);
   }
+  CLI_PRINT("----------------------------------------");
+  printf(">");
 }
 
-static error_code_e cli_replace_text(char *buf, const char *old, const char *rep)
-{
+static error_code_e cli_replace_text(char *buf, const char *old, const char *rep) {
   CLI_ERROR(buf == NULL)
   CLI_ERROR(old == NULL)
   CLI_ERROR(rep == NULL)
   char tmp[1024];
   char *p;
 
-/*
- buf old ...
- buf \0 old ...
- buf \0 old tmp
- buf new tmp
-*/
+  /*
+   buf old ...
+   buf \0 old ...
+   buf \0 old tmp
+   buf new tmp
+  */
   while ((p = strstr(buf, old)) != NULL) {
     *p = '\0';
     p += strlen(old);
@@ -38,11 +41,30 @@ static error_code_e cli_replace_text(char *buf, const char *old, const char *rep
   return RC_SUCESS;
 }
 
-static error_code_e cli_print_text(char file[], char* name) {
+static error_code_e cli_text_separator(const char *str, bool *is_separate) {
+  if (strcmp(str, "▼\n") == 0) {
+    CLI_PRINT("\n")
+    CLI_PRINT("-----------------")
+    CLI_PRINT("next enter")
+    *is_separate = true;
+    while (getchar() != '\n') {
+    }
+    system("clear");
+  }
+  return RC_SUCESS;
+}
+
+static error_code_e cli_print_text(const char file[], const char *name) {
   char str[PRINT_MAX];
+  bool is_separate = false;
   FILE *fp = fopen(file, "r");
   CLI_ERROR(fp == NULL)
   while (fgets(str, sizeof(str), fp) != NULL) {
+    is_separate = false;
+    cli_text_separator(str, &is_separate);
+    if (is_separate) {
+      continue;
+    }
     cli_replace_text(str, "ユーザ名", name);
     printf("%s", str);
   }
