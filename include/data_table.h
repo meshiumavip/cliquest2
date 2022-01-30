@@ -23,10 +23,11 @@ typedef enum {
 } mat_t_tag_e;
 
 typedef enum {
-  GLOBAL,
-  CITY,
+  OPEN_SPACE,
   ROAD,
+  CITY,
   DUNGEON,
+  DUMNY,
 } map_type_e;
 
 typedef struct {

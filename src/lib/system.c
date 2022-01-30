@@ -2,22 +2,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "cliquest_error.h"
 #include "data_table.h"
 #include "scene.h"
 #include "system.h"
+#include "color.h"
 
-error_code_e cli_draw_map(map_t *m_table){
-  printf("gl [%d, %d]\n", m_table->global_location[0], m_table->global_location[1]);
-  printf("%s\n", m_table->name);
-  printf("map type %d\n", m_table->mt);
-  for(int32_t i=0 ; i<10; i++){
-    for(int32_t j=0 ; j<10; j++){
-      printf("%3d", m_table->map_field[i][j]);
+static error_code_e cli_convert_map_elements(data_table_t *dt, int32_t x, int32_t y){
+  map_t *gmt = &(dt->m_table[GLOBAL_MAP]);
+  bool is_player_here = false;
+  if(dt->p_data.global_location[0] == x && dt->p_data.global_location[1] == y){
+    is_player_here = true;
+  }
+  switch (gmt->map_field[x][y]){
+    case OPEN_SPACE:
+      printf("  ");
+      break;
+    case ROAD:
+      if(is_player_here){YELLOW(" +"); break;}
+      printf(" +");
+      break;
+    case CITY:
+      if(is_player_here){YELLOW(" C"); break;}
+      printf(" C");
+      break;
+    case DUNGEON:
+      if(is_player_here){YELLOW(" D"); break;}
+      printf(" D");
+    default:
+      break;
+  }
+}
+
+error_code_e cli_draw_global_map(data_table_t *dt){
+  printf("%s\n", dt->m_table[GLOBAL_MAP].name);
+  player_t *pd = &(dt->p_data);
+  for(int32_t x=0 ; x<10; x++){
+    for(int32_t y=0 ; y<10; y++){
+      cli_convert_map_elements(dt, x, y);
     }
     printf("\n");
   }
+  return RC_SUCESS;
 }
 
 error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
@@ -58,7 +86,7 @@ error_code_e cli_create_item_table(item_t *i_table) {
 
 error_code_e cli_create_map_table(map_t *m_table) {
   map_t map_table[] = {
-    {"世界地図", {31,31}, GLOBAL,
+    {"世界地図", {31,31}, DUMNY,
       {
         {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 3 },
         {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 1 },
@@ -184,8 +212,8 @@ error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const 
 error_code_e cli_init_player_data(player_t *p_data) {
   int32_t ret;
   player_equipment_t *pe = &(p_data->pe);
-  p_data->global_location[0] = 10;
-  p_data->global_location[1] = 5;
+  p_data->global_location[0] = 9;
+  p_data->global_location[1] = 4;
   p_data->local_location = 0;
   p_data->item[0] = HP_PORTION;
   p_data->item[1] = MP_PORTION;
