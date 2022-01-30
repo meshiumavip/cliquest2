@@ -7,6 +7,9 @@ extern "C" {
 #include "system.h"
 }
 
+#define cli_system_clear cli_stub_system_clear
+error_code_e cli_stub_system_clear(){return RC_SUCESS;}
+
 extern "C" {
 #include "system.c"
 }

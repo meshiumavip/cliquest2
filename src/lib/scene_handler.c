@@ -39,7 +39,8 @@ error_code_e cli_scene_handler(void) {
   };
 
   while (rc == RC_SUCESS) {
-    system("clear");
+    rc = cli_system_clear();
+    CLI_ERROR(rc == RC_INTERNAL_ERROR)
     rc = handler[dt->next_s].scene(dt);
     CLI_ERROR(rc == RC_INTERNAL_ERROR)
   }

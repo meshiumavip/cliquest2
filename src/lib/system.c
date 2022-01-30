@@ -8,12 +8,6 @@
 #include "scene.h"
 #include "system.h"
 
-/*
-error_code_e cli_scene_xx(data_table_t *data_table){
-  return RC_SUCESS;
-}
-*/
-
 error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
   FILE *file;
   if ((file = fopen("cliquest.log", "a")) == NULL) {
@@ -208,7 +202,10 @@ error_code_e cli_init_player_data(player_t *p_data) {
     return RC_INTERNAL_ERROR;
   }
   ret = cli_get_input_str("名前を教えてください。",sizeof(char) * NAME_MAX,  p_data->name);
-  system("clear");
+  if (ret != RC_SUCESS) {
+    return RC_INTERNAL_ERROR;
+  }
+  ret = cli_system_clear();
   if (ret != RC_SUCESS) {
     return RC_INTERNAL_ERROR;
   }

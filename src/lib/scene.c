@@ -27,7 +27,6 @@ static error_code_e cli_replace_text(char *buf, const char *old, const char *rep
 
   /*
    buf old ...
-   buf \0 old ...
    buf \0 old tmp
    buf new tmp
   */
@@ -42,6 +41,7 @@ static error_code_e cli_replace_text(char *buf, const char *old, const char *rep
 }
 
 static error_code_e cli_text_separator(const char *str, bool *is_separate) {
+  error_code_e rc = RC_SUCESS;
   if (strcmp(str, "▼\n") == 0) {
     CLI_PRINT("\n")
     CLI_PRINT("-----------------")
@@ -49,7 +49,8 @@ static error_code_e cli_text_separator(const char *str, bool *is_separate) {
     *is_separate = true;
     while (getchar() != '\n') {
     }
-    system("clear");
+    rc = cli_system_clear();
+    CLI_ERROR(rc == RC_INTERNAL_ERROR)
   }
   return RC_SUCESS;
 }
@@ -82,7 +83,8 @@ error_code_e cli_scene_game_start(data_table_t *dt) {
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
 
-  cli_print_text(file, dt->p_data.name);
+  rc = cli_print_text(file, dt->p_data.name);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
   cli_display_actions(options, action);
   rc = cli_get_input_action(options, &num);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
@@ -94,7 +96,7 @@ error_code_e cli_scene_prologue(data_table_t *dt) {
   uint8_t rc = RC_SUCESS;
   rc = cli_init_player_data(&(dt->p_data));
   char file[] = "/home/wsl/cliquest2/text/prologue.txt";
-  cli_print_text(file, dt->p_data.name);
+  rc = cli_print_text(file, dt->p_data.name);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   dt->next_s = ACTION_MENU_MAIN;
   return RC_SUCESS;
