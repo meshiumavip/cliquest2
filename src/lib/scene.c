@@ -129,7 +129,7 @@ error_code_e cli_action_menu_main(data_table_t *dt) {
 }
 
 error_code_e cli_action_menu_global_map(data_table_t *dt) {
-  CLI_PRINT("TBD")
+  cli_draw_map(&(dt->m_table[0]));
   return RC_INTERNAL_ERROR;
 }
 

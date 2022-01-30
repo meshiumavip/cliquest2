@@ -35,7 +35,8 @@ TEST_F(cli_system, Test3) {
   EXPECT_STREQ("世界地図", mt[0].name);
   EXPECT_STREQ("クリスタルの洞窟", mt[7].name);
   EXPECT_EQ(0, mt[0].map_field[0][0]);
-  EXPECT_EQ(9, mt[0].map_field[9][10]);
+  EXPECT_EQ(3, mt[0].map_field[0][9]);
+  EXPECT_EQ(2, mt[0].map_field[9][4]);
 }
 
 TEST_F(cli_system, Test4) {

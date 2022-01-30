@@ -8,6 +8,18 @@
 #include "scene.h"
 #include "system.h"
 
+error_code_e cli_draw_map(map_t *m_table){
+  printf("gl [%d, %d]\n", m_table->global_location[0], m_table->global_location[1]);
+  printf("%s\n", m_table->name);
+  printf("map type %d\n", m_table->mt);
+  for(int32_t i=0 ; i<10; i++){
+    for(int32_t j=0 ; j<10; j++){
+      printf("%3d", m_table->map_field[i][j]);
+    }
+    printf("\n");
+  }
+}
+
 error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
   FILE *file;
   if ((file = fopen("cliquest.log", "a")) == NULL) {
@@ -45,35 +57,28 @@ error_code_e cli_create_item_table(item_t *i_table) {
 }
 
 error_code_e cli_create_map_table(map_t *m_table) {
-  uint8_t CE = CENTRAL;
-  uint8_t NC = NORTH_CITY;
-  uint8_t SP = SOUTH_PORT;
-  uint8_t EM = EAST_MOUNTAIN;
-  uint8_t WD = WEST_DESERT;
-  uint8_t NM = NORTH_MEADOW;
-  uint8_t CC = CRISTAL_CAVE;
   map_t map_table[] = {
-    {"世界地図", GLOBAL_MAP, GLOBAL,
+    {"世界地図", {31,31}, GLOBAL,
       {
-        {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , NM, 9},
-        {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 1 , 9},
-        {0 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 1 , 9},
-        {0 , 0 , 0 , 0 , 0 , NC, 0 , 0 , 0 , CC, 9},
-        {0 , 0 , 0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 9},
-        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 9},
-        {0 , 0 , 1 , 1 , CE, 1 , 1 , 1 , 1 , EM, 9},
-        {0 , 0 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 9},
-        {1 , 1 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 9},
-        {WD, 0 , 0 , 0 , SP, 0 , 0 , 0 , 0 , 0 , 9},
+        {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 3 },
+        {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 1 },
+        {0 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 1 },
+        {0 , 0 , 0 , 0 , 0 , 2 , 0 , 0 , 0 , 3 },
+        {0 , 0 , 0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 1 , 1 , 2 , 1 , 1 , 1 , 1 , 3 },
+        {0 , 0 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {1 , 1 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {3 , 0 , 0 , 0 , 2 , 0 , 0 , 0 , 0 , 0 },
       }
     },
-    {"セントラル", CENTRAL, CITY, },
-    {"北の街", NORTH_CITY, CITY, },
-    {"南の港", SOUTH_PORT, CITY, },
-    {"東の山", EAST_MOUNTAIN, DUNGEON, },
-    {"西の砂漠", WEST_DESERT, DUNGEON, },
-    {"北の草原", NORTH_MEADOW, DUNGEON, },
-    {"クリスタルの洞窟", CRISTAL_CAVE, DUNGEON, },
+    {"セントラル", {6,4}, CITY, },
+    {"北の街", {3,5}, CITY, },
+    {"南の港", {9,4}, CITY, },
+    {"東の山", {6,9}, DUNGEON, },
+    {"西の砂漠", {9,0}, DUNGEON, },
+    {"北の草原", {0,9}, DUNGEON, },
+    {"クリスタルの洞窟", {3,9}, DUNGEON, },
   };
     memcpy(m_table, map_table, sizeof(map_table));
   return RC_SUCESS;
@@ -179,7 +184,8 @@ error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const 
 error_code_e cli_init_player_data(player_t *p_data) {
   int32_t ret;
   player_equipment_t *pe = &(p_data->pe);
-  p_data->gl = SOUTH_PORT;
+  p_data->global_location[0] = 10;
+  p_data->global_location[1] = 5;
   p_data->local_location = 0;
   p_data->item[0] = HP_PORTION;
   p_data->item[1] = MP_PORTION;

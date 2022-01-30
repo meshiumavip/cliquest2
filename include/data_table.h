@@ -13,14 +13,14 @@
 // MAP
 typedef enum {
   GLOBAL_MAP = 0,
-  CENTRAL = 10,
+  CENTRAL,
   NORTH_CITY,
   SOUTH_PORT,
   EAST_MOUNTAIN,
   WEST_DESERT,
   NORTH_MEADOW,
   CRISTAL_CAVE,
-} global_location_e;
+} mat_t_tag_e;
 
 typedef enum {
   GLOBAL,
@@ -31,9 +31,9 @@ typedef enum {
 
 typedef struct {
   char name[NAME_MAX];
-  global_location_e gl;
+  uint8_t global_location[2];
   map_type_e mt;
-  uint8_t map_field[10][11];
+  uint8_t map_field[10][10];
 } map_t;
 
 // ITEM
@@ -135,7 +135,7 @@ typedef struct player_equipment {
 
 typedef struct player {
   char name[NAME_MAX];
-  global_location_e gl;
+  uint32_t global_location[2];
   uint8_t local_location;
   player_status_t ps;
   player_status_buf_t psb;
@@ -199,8 +199,6 @@ typedef struct data_table {
   enemy_t e_table;
   item_t i_table[ID_MAX];
   map_t m_table[8];
-  global_location_e gl;
-  uint8_t local_map[ID_MAX];
   scene_e next_s;
 } data_table_t;
 
