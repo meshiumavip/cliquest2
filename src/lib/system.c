@@ -23,6 +23,28 @@ error_code_e cli_logger(const char *filename, const int32_t line, const char *fu
 
 static error_code_e cli_convert_local_map_elements(data_table_t *dt, const int32_t x, const int32_t y){
   local_map_t *m_table = &(dt->lm_table[dt->p_data.ll_tag]);
+    bool is_player_here = false;
+  char color[32] = "WHITE";
+  if(dt->p_data.local_location[0] == x && dt->p_data.local_location[1] == y){
+    is_player_here = true;
+    sprintf(color, "YELLOW");
+  }
+  switch (m_table->map_field[x][y]){
+    case WALL:
+      printf("  ");
+      break;
+    case PATH:
+      cli_color_print(color, " +");
+      break;
+    case SECRET_PATH:
+      cli_color_print(color, " *");
+      break;
+    case BOSS:
+      cli_color_print(color, " B");
+      break;
+    default:
+      break;
+  }
   return RC_SUCESS;
 }
 
@@ -103,16 +125,16 @@ error_code_e cli_create_local_map_table(local_map_t *lm_table) {
     {NORTH_CITY, "北の街", {3,5}, },
     {SOUTH_PORT, "南の港", {9,4},
       {
-        {0 , 0 , 0 , 0 , 4 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 3 , 0 , 0 , 0 , 0 , 0 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
-        {0 , 0 , 0 , 0 , 1 , 5 , 5 , 5 , 5 , 4 },
+        {0 , 0 , 0 , 0 , 1 , 2 , 2 , 2 , 2 , 3 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
         {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
-        {0 , 0 , 0 , 0 , 2 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
       }
     },
     {EAST_MOUNTAIN, "東の山", {6,9}, },

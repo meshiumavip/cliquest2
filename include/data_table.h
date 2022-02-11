@@ -34,6 +34,7 @@ typedef enum {
 } global_map_element_e;
 
 typedef enum {
+  WALL,
   PATH,
   SECRET_PATH,
   BOSS,
