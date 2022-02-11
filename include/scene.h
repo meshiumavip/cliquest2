@@ -8,7 +8,6 @@
 #include "data_table.h"
 
 typedef struct menu_select {
-  map_type_e mt;
   uint8_t s1;
   uint8_t s2;
   uint8_t s3;

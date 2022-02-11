@@ -10,44 +10,6 @@
 #include "system.h"
 #include "color.h"
 
-static error_code_e cli_convert_map_elements(data_table_t *dt, int32_t x, int32_t y){
-  map_t *gmt = &(dt->m_table[GLOBAL_MAP]);
-  bool is_player_here = false;
-  if(dt->p_data.global_location[0] == x && dt->p_data.global_location[1] == y){
-    is_player_here = true;
-  }
-  switch (gmt->map_field[x][y]){
-    case OPEN_SPACE:
-      printf("  ");
-      break;
-    case ROAD:
-      if(is_player_here){YELLOW(" +"); break;}
-      printf(" +");
-      break;
-    case CITY:
-      if(is_player_here){YELLOW(" C"); break;}
-      printf(" C");
-      break;
-    case DUNGEON:
-      if(is_player_here){YELLOW(" D"); break;}
-      printf(" D");
-    default:
-      break;
-  }
-}
-
-error_code_e cli_draw_global_map(data_table_t *dt){
-  printf("%s\n", dt->m_table[GLOBAL_MAP].name);
-  player_t *pd = &(dt->p_data);
-  for(int32_t x=0 ; x<10; x++){
-    for(int32_t y=0 ; y<10; y++){
-      cli_convert_map_elements(dt, x, y);
-    }
-    printf("\n");
-  }
-  return RC_SUCESS;
-}
-
 error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str) {
   FILE *file;
   if ((file = fopen("cliquest.log", "a")) == NULL) {
@@ -56,6 +18,57 @@ error_code_e cli_logger(const char *filename, const int32_t line, const char *fu
   }
   fprintf(file, "%s:%d %s() :%s\n", filename, line, funcname, str);
   fclose(file);
+  return RC_SUCESS;
+}
+
+static error_code_e cli_convert_local_map_elements(data_table_t *dt, const int32_t x, const int32_t y){
+  local_map_t *m_table = &(dt->lm_table[dt->p_data.ll_tag]);
+  return RC_SUCESS;
+}
+
+error_code_e cli_draw_local_map(data_table_t *dt){
+  for(int32_t x=0 ; x<10; x++){
+    for(int32_t y=0 ; y<10; y++){
+      cli_convert_local_map_elements(dt, x, y);
+    }
+    printf("\n");
+  }
+  return RC_SUCESS;
+}
+
+static error_code_e cli_convert_global_map_elements(data_table_t *dt, const int32_t x, const int32_t y){
+  global_map_t *gm_table = &(dt->gm_table[dt->p_data.gl_tag]);
+  bool is_player_here = false;
+  char color[32] = "WHITE";
+  if(dt->p_data.global_location[0] == x && dt->p_data.global_location[1] == y){
+    is_player_here = true;
+    sprintf(color, "YELLOW");
+  }
+  switch (gm_table->map_field[x][y]){
+    case OPEN_SPACE:
+      printf("  ");
+      break;
+    case ROAD:
+      cli_color_print(color, " +");
+      break;
+    case CITY:
+      cli_color_print(color, " C");
+      break;
+    case DUNGEON:
+      cli_color_print(color, " D");
+      break;
+    default:
+      break;
+  }
+}
+
+error_code_e cli_draw_global_map(data_table_t *dt){
+  for(int32_t x=0 ; x<10; x++){
+    for(int32_t y=0 ; y<10; y++){
+      cli_convert_global_map_elements(dt, x, y);
+    }
+    printf("\n");
+  }
   return RC_SUCESS;
 }
 
@@ -84,9 +97,36 @@ error_code_e cli_create_item_table(item_t *i_table) {
   return RC_SUCESS;
 }
 
-error_code_e cli_create_map_table(map_t *m_table) {
-  map_t map_table[] = {
-    {"世界地図", {31,31}, DUMNY,
+error_code_e cli_create_local_map_table(local_map_t *lm_table) {
+  local_map_t map_table[] = {
+    {CENTRAL, "セントラル", {6,4}, },
+    {NORTH_CITY, "北の街", {3,5}, },
+    {SOUTH_PORT, "南の港", {9,4},
+      {
+        {0 , 0 , 0 , 0 , 4 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 5 , 5 , 5 , 5 , 4 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
+        {0 , 0 , 0 , 0 , 2 , 0 , 0 , 0 , 0 , 0 },
+      }
+    },
+    {EAST_MOUNTAIN, "東の山", {6,9}, },
+    {WEST_DESERT, "西の砂漠", {9,0}, },
+    {NORTH_MEADOW, "北の草原", {0,9}, },
+    { CRISTAL_CAVE, "クリスタルの洞窟", {3,9},},
+  };
+  memcpy(lm_table, map_table, sizeof(map_table));
+  return RC_SUCESS;
+}
+
+error_code_e cli_create_global_map_table(global_map_t *gm_table) {
+  global_map_t map_table[] = {
+    {GLOBAL_MAP_STAGE1, "1の島",
       {
         {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 3 },
         {0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 1 },
@@ -99,16 +139,9 @@ error_code_e cli_create_map_table(map_t *m_table) {
         {1 , 1 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 },
         {3 , 0 , 0 , 0 , 2 , 0 , 0 , 0 , 0 , 0 },
       }
-    },
-    {"セントラル", {6,4}, CITY, },
-    {"北の街", {3,5}, CITY, },
-    {"南の港", {9,4}, CITY, },
-    {"東の山", {6,9}, DUNGEON, },
-    {"西の砂漠", {9,0}, DUNGEON, },
-    {"北の草原", {0,9}, DUNGEON, },
-    {"クリスタルの洞窟", {3,9}, DUNGEON, },
+    },{GLOBAL_MAP_STAGE2, "2の島", }
   };
-    memcpy(m_table, map_table, sizeof(map_table));
+  memcpy(gm_table, map_table, sizeof(map_table));
   return RC_SUCESS;
 }
 
@@ -212,9 +245,12 @@ error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const 
 error_code_e cli_init_player_data(player_t *p_data) {
   int32_t ret;
   player_equipment_t *pe = &(p_data->pe);
+  p_data->gl_tag = GLOBAL_MAP_STAGE1;
+  p_data->ll_tag = SOUTH_PORT;
   p_data->global_location[0] = 9;
   p_data->global_location[1] = 4;
-  p_data->local_location = 0;
+  p_data->local_location[0] = 9;
+  p_data->local_location[1] = 4;
   p_data->item[0] = HP_PORTION;
   p_data->item[1] = MP_PORTION;
   p_data->item[2] = IRON_SWORD;

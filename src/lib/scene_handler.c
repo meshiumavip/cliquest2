@@ -9,12 +9,15 @@
 
 static error_code_e cli_create_tabldes(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
-  map_t *m_table = dt->m_table;
+  local_map_t *lm_table = dt->lm_table;
+  global_map_t *gm_table = dt->gm_table;
   item_t *i_table = dt->i_table;
   player_t *p_data = &(dt->p_data);
   rc = cli_create_item_table(i_table);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  rc = cli_create_map_table(m_table);
+  rc = cli_create_local_map_table(lm_table);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  rc = cli_create_global_map_table(gm_table);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   return RC_SUCESS;
 }

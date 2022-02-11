@@ -30,13 +30,14 @@ TEST_F(cli_system, Test2) {
 TEST_F(cli_system, Test3) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
-  map_t* mt = dt->m_table;
-  EXPECT_EQ(RC_SUCESS, cli_create_map_table(mt));
-  EXPECT_STREQ("世界地図", mt[0].name);
-  EXPECT_STREQ("クリスタルの洞窟", mt[7].name);
-  EXPECT_EQ(0, mt[0].map_field[0][0]);
-  EXPECT_EQ(3, mt[0].map_field[0][9]);
-  EXPECT_EQ(2, mt[0].map_field[9][4]);
+  global_map_t* gm_table = dt->gm_table;
+  local_map_t* lm_table = dt->lm_table;
+  EXPECT_EQ(RC_SUCESS, cli_create_global_map_table(gm_table));
+  EXPECT_STREQ("1の島", gm_table[0].name);
+  EXPECT_STREQ("2の島", gm_table[1].name);
+  EXPECT_EQ(0, gm_table[0].map_field[0][0]);
+  EXPECT_EQ(3, gm_table[0].map_field[0][9]);
+  EXPECT_EQ(2, gm_table[0].map_field[9][4]);
 }
 
 TEST_F(cli_system, Test4) {

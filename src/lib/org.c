@@ -1,3 +1,7 @@
+/*
+  this file functions have stub function in googletest
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "system.h"

@@ -12,7 +12,11 @@
 
 // MAP
 typedef enum {
-  GLOBAL_MAP = 0,
+  GLOBAL_MAP_STAGE1,
+  GLOBAL_MAP_STAGE2,
+}global_location_tag_e;
+
+typedef enum {
   CENTRAL,
   NORTH_CITY,
   SOUTH_PORT,
@@ -20,22 +24,33 @@ typedef enum {
   WEST_DESERT,
   NORTH_MEADOW,
   CRISTAL_CAVE,
-} mat_t_tag_e;
+} local_location_tag_e;
 
 typedef enum {
   OPEN_SPACE,
   ROAD,
   CITY,
   DUNGEON,
-  DUMNY,
-} map_type_e;
+} global_map_element_e;
+
+typedef enum {
+  PATH,
+  SECRET_PATH,
+  BOSS,
+} local_map_element_e;
 
 typedef struct {
+  global_location_tag_e gl_tag;
+  char name[NAME_MAX];
+  uint8_t map_field[10][10];
+} global_map_t;
+
+typedef struct {
+  local_location_tag_e ll_tag;
   char name[NAME_MAX];
   uint8_t global_location[2];
-  map_type_e mt;
   uint8_t map_field[10][10];
-} map_t;
+} local_map_t;
 
 // ITEM
 typedef enum {
@@ -136,8 +151,10 @@ typedef struct player_equipment {
 
 typedef struct player {
   char name[NAME_MAX];
+  global_location_tag_e gl_tag;
+  local_location_tag_e ll_tag;
   uint32_t global_location[2];
-  uint8_t local_location;
+  uint32_t local_location[2];
   player_status_t ps;
   player_status_buf_t psb;
   player_equipment_t pe;
@@ -199,7 +216,8 @@ typedef struct data_table {
   player_t p_data;
   enemy_t e_table;
   item_t i_table[ID_MAX];
-  map_t m_table[8];
+  local_map_t lm_table[7];
+  global_map_t gm_table[2];
   scene_e next_s;
 } data_table_t;
 
