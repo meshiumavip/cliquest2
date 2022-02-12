@@ -28,17 +28,20 @@ error_code_e cli_scene_handler(void) {
   cli_create_tabldes(dt);
   dt->next_s = SCENE_GAME_START;
   uint8_t rc = RC_SUCESS;
+  // TODO secene_eと配列の順序が一致しないと適切な関数を呼び出せない
   scene_handler_t handler[] = {
       {SCENE_GAME_START, cli_scene_game_start},
       {SCENE_PROLOGUE, cli_scene_prologue},
       {SCENE_MAOU_CASTLE, cli_scene_maou_castle},
-      {ACTION_MENU_MAIN, cli_action_menu_main},
-      {ACTION_MENU_GLOBAL_MAP, cli_action_menu_global_map},
-      {ACTION_MENU_LOACL_MAP, cli_action_menu_local_map},
-      {ACTION_MENU_STATUS, cli_action_menu_status},
-      {ACTION_MENU_ITEM, cli_action_menu_item},
-      {ACTION_MENU_EXPLORER, cli_action_menu_explorer},
-      {ACTION_MENU_MOVE, cli_action_menu_move},
+      {ACTION_MENU_MAIN_CITY, cli_action_menu_city},
+      {ACTION_MENU_MAIN_ROAD,},
+      {ACTION_MENU_MAIN_DUNGEON,},
+      {ACTION_MENU_GLOBAL_MAP, cli_action_global_map},
+      {ACTION_MENU_LOACL_MAP, cli_action_local_map},
+      {ACTION_MENU_STATUS, cli_action_status},
+      {ACTION_MENU_ITEM, cli_action_item},
+      {ACTION_MENU_EXPLORER, cli_action_explorer},
+      {ACTION_MENU_MOVE, cli_action_move},
   };
 
   while (rc == RC_SUCESS) {

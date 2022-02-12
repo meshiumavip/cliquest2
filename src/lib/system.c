@@ -140,7 +140,7 @@ error_code_e cli_create_local_map_table(local_map_t *lm_table) {
     {EAST_MOUNTAIN, "東の山", {6,9}, },
     {WEST_DESERT, "西の砂漠", {9,0}, },
     {NORTH_MEADOW, "北の草原", {0,9}, },
-    { CRISTAL_CAVE, "クリスタルの洞窟", {3,9},},
+    {CRISTAL_CAVE, "クリスタルの洞窟", {3,9},},
   };
   memcpy(lm_table, map_table, sizeof(map_table));
   return RC_SUCESS;

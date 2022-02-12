@@ -9,7 +9,7 @@
 #include "scene.h"
 #include "system.h"
 
-static void cli_display_actions(const uint8_t options, action_t *action) {
+static void cli_display_actions(const uint8_t options, const action_t *action) {
   CLI_PRINT("----------------------------------------");
   for (int32_t i = 0; i < options; i++) {
     CLI_PRINT("%d: %s", i + 1, action[i].str);
@@ -79,7 +79,7 @@ error_code_e cli_scene_game_start(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
       {1, "さいしょから", SCENE_PROLOGUE},
-      {2, "つづきから", ACTION_MENU_MAIN},
+      {2, "つづきから", ACTION_MENU_MAIN_CITY},
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
 
@@ -98,7 +98,7 @@ error_code_e cli_scene_prologue(data_table_t *dt) {
   char file[] = "/home/wsl/cliquest2/text/prologue.txt";
   rc = cli_print_text(file, dt->p_data.name);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  dt->next_s = ACTION_MENU_MAIN;
+  dt->next_s = ACTION_MENU_MAIN_CITY;
   return RC_SUCESS;
 }
 
@@ -106,54 +106,58 @@ error_code_e cli_scene_maou_castle(data_table_t *dt) {
   return RC_SUCESS;
 }
 
-error_code_e cli_action_menu_main(data_table_t *dt) {
+error_code_e cli_action_menu(data_table_t *dt, const action_t *action, const uint8_t options) {
   error_code_e rc = RC_SUCESS;
-  char str[NAME_MAX];
-  uint8_t num;
-  action_t action[] = {
-      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
-      {2, "ダンジョン地図", ACTION_MENU_LOACL_MAP},
-      {3, "ステータス", ACTION_MENU_STATUS},
-      {4, "アイテム", ACTION_MENU_ITEM},
-      {5, "探索", ACTION_MENU_EXPLORER},
-      {6, "移動", ACTION_MENU_MOVE},
-  };
-  uint8_t options = sizeof(action) / sizeof(action_t);
+  uint8_t select_num;
   cli_display_actions(options, action);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  rc = cli_get_input_action(options, &num);
-  CLI_ERROR(num > options)
-  CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  dt->next_s = action[num - 1].next_s;
+  rc = cli_get_input_action(options, &select_num);
+  CLI_ERROR(select_num > options)
+  dt->next_s = action[select_num - 1].next_s;
   return RC_SUCESS;
 }
 
-error_code_e cli_action_menu_global_map(data_table_t *dt) {
+error_code_e cli_action_menu_city(data_table_t *dt) {
+  error_code_e rc = RC_SUCESS;
+  action_t action[] = {
+      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
+      {2, "ステータス", ACTION_MENU_STATUS},
+      {3, "アイテム", ACTION_MENU_ITEM},
+      {4, "探索", ACTION_MENU_EXPLORER},
+      {5, "移動", ACTION_MENU_MOVE},
+  };
+  uint8_t options = sizeof(action) / sizeof(action_t);
+  cli_action_menu(dt, action, options);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  return RC_SUCESS;
+}
+
+error_code_e cli_action_global_map(data_table_t *dt) {
   cli_draw_global_map(dt);
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_menu_local_map(data_table_t *dt) {
+error_code_e cli_action_local_map(data_table_t *dt) {
   cli_draw_local_map(dt);
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_menu_status(data_table_t *dt) {
+error_code_e cli_action_status(data_table_t *dt) {
   CLI_PRINT("TBD")
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_menu_item(data_table_t *dt) {
+error_code_e cli_action_item(data_table_t *dt) {
   CLI_PRINT("TBD")
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_menu_explorer(data_table_t *dt) {
+error_code_e cli_action_explorer(data_table_t *dt) {
   CLI_PRINT("TBD")
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_menu_move(data_table_t *dt) {
+error_code_e cli_action_move(data_table_t *dt) {
   CLI_PRINT("TBD")
   return RC_INTERNAL_ERROR;
 }
