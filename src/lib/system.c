@@ -21,6 +21,28 @@ error_code_e cli_logger(const char *filename, const int32_t line, const char *fu
   return RC_SUCESS;
 }
 
+
+/*
+  Edit data
+*/ 
+error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const item_type_e it) {
+  if (it == ARMOR) {
+    pe->armor = il;
+  }
+  if (it == WEAPON) {
+    pe->weapon = il;
+  }
+  return RC_SUCESS;
+}
+
+/*
+  View data
+*/ 
+
+error_code_e cli_view_player_status(data_table_t *dt){
+  CLI_PRINT("%s",dt->p_data.name)
+}
+
 static error_code_e cli_convert_local_map_elements(data_table_t *dt, const int32_t x, const int32_t y){
   local_map_t *m_table = &(dt->lm_table[dt->p_data.ll_tag]);
     bool is_player_here = false;
@@ -48,13 +70,16 @@ static error_code_e cli_convert_local_map_elements(data_table_t *dt, const int32
   return RC_SUCESS;
 }
 
-error_code_e cli_draw_local_map(data_table_t *dt){
+error_code_e cli_view_local_map(data_table_t *dt){
+  CLI_PRINT("%s", dt->lm_table[dt->p_data.ll_tag].name);
+  CLI_PRINT("----------------------------------------");
   for(int32_t x=0 ; x<10; x++){
     for(int32_t y=0 ; y<10; y++){
       cli_convert_local_map_elements(dt, x, y);
     }
     printf("\n");
   }
+  CLI_PRINT("----------------------------------------");
   return RC_SUCESS;
 }
 
@@ -84,7 +109,10 @@ static error_code_e cli_convert_global_map_elements(data_table_t *dt, const int3
   }
 }
 
-error_code_e cli_draw_global_map(data_table_t *dt){
+error_code_e cli_view_global_map(data_table_t *dt){
+  CLI_PRINT("%s", dt->gm_table[dt->p_data.gl_tag].name);
+  CLI_PRINT("%s", dt->lm_table[dt->p_data.ll_tag].name);
+  CLI_PRINT("----------------------------------------");
   for(int32_t x=0 ; x<10; x++){
     for(int32_t y=0 ; y<10; y++){
       cli_convert_global_map_elements(dt, x, y);
@@ -94,6 +122,52 @@ error_code_e cli_draw_global_map(data_table_t *dt){
   return RC_SUCESS;
 }
 
+/*
+  Initialize data table 
+*/ 
+error_code_e cli_init_player_data(player_t *p_data) {
+  int32_t ret;
+  player_equipment_t *pe = &(p_data->pe);
+  p_data->gl_tag = GLOBAL_MAP_STAGE1;
+  p_data->ll_tag = SOUTH_PORT;
+  p_data->global_location[0] = 9;
+  p_data->global_location[1] = 4;
+  p_data->local_location[0] = 9;
+  p_data->local_location[1] = 4;
+  p_data->item[0] = HP_PORTION;
+  p_data->item[1] = MP_PORTION;
+  p_data->item[2] = IRON_SWORD;
+  p_data->item[3] = LEATHRE_ARMOR;
+  p_data->ps.MAX_HP = 100;
+  p_data->ps.MAX_MP = 100;
+  p_data->ps.HP = 100;
+  p_data->ps.MP = 100;
+  p_data->ps.ATT = 10;
+  p_data->ps.DEF = 10;
+  p_data->ps.WIS = 10;
+  p_data->ps.SPD = 10;
+  ret = cli_equip_item(pe, IRON_SWORD, WEAPON);
+  if (ret != RC_SUCESS) {
+    return RC_INTERNAL_ERROR;
+  }
+  ret = cli_equip_item(pe, LEATHRE_ARMOR, ARMOR);
+  if (ret != RC_SUCESS) {
+    return RC_INTERNAL_ERROR;
+  }
+  ret = cli_get_input_str("名前を教えてください。",sizeof(char) * NAME_MAX,  p_data->name);
+  if (ret != RC_SUCESS) {
+    return RC_INTERNAL_ERROR;
+  }
+  ret = cli_system_clear();
+  if (ret != RC_SUCESS) {
+    return RC_INTERNAL_ERROR;
+  }
+  return RC_SUCESS;
+}
+
+/*
+  Create data table
+*/
 error_code_e cli_create_item_table(item_t *i_table) {
   item_t item_table[] = {
       {HP_PORTION, TIRE0, NORMAL_ITEM, "HPポーション", "HPを50回復する", 50, 0, 0, 0, 0, 0},
@@ -167,6 +241,9 @@ error_code_e cli_create_global_map_table(global_map_t *gm_table) {
   return RC_SUCESS;
 }
 
+/*
+  Input data
+*/ 
 static error_code_e lntrim(char *str, const size_t data_size) {
   for (int32_t i = 0; i < data_size; i++) {
     if (str[i] == '\n') {
@@ -249,57 +326,6 @@ error_code_e cli_get_input_action(const uint8_t actions, uint8_t *num){
       continue;
     }
     break;
-  }
-  return RC_SUCESS;
-}
-
-
-error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const item_type_e it) {
-  if (it == ARMOR) {
-    pe->armor = il;
-  }
-  if (it == WEAPON) {
-    pe->weapon = il;
-  }
-  return RC_SUCESS;
-}
-
-error_code_e cli_init_player_data(player_t *p_data) {
-  int32_t ret;
-  player_equipment_t *pe = &(p_data->pe);
-  p_data->gl_tag = GLOBAL_MAP_STAGE1;
-  p_data->ll_tag = SOUTH_PORT;
-  p_data->global_location[0] = 9;
-  p_data->global_location[1] = 4;
-  p_data->local_location[0] = 9;
-  p_data->local_location[1] = 4;
-  p_data->item[0] = HP_PORTION;
-  p_data->item[1] = MP_PORTION;
-  p_data->item[2] = IRON_SWORD;
-  p_data->item[3] = LEATHRE_ARMOR;
-  p_data->ps.MAX_HP = 100;
-  p_data->ps.MAX_MP = 100;
-  p_data->ps.HP = 100;
-  p_data->ps.MP = 100;
-  p_data->ps.ATT = 10;
-  p_data->ps.DEF = 10;
-  p_data->ps.WIS = 10;
-  p_data->ps.SPD = 10;
-  ret = cli_equip_item(pe, IRON_SWORD, WEAPON);
-  if (ret != RC_SUCESS) {
-    return RC_INTERNAL_ERROR;
-  }
-  ret = cli_equip_item(pe, LEATHRE_ARMOR, ARMOR);
-  if (ret != RC_SUCESS) {
-    return RC_INTERNAL_ERROR;
-  }
-  ret = cli_get_input_str("名前を教えてください。",sizeof(char) * NAME_MAX,  p_data->name);
-  if (ret != RC_SUCESS) {
-    return RC_INTERNAL_ERROR;
-  }
-  ret = cli_system_clear();
-  if (ret != RC_SUCESS) {
-    return RC_INTERNAL_ERROR;
   }
   return RC_SUCESS;
 }

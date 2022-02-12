@@ -10,11 +10,11 @@
 #include "system.h"
 
 static void cli_display_actions(const uint8_t options, const action_t *action) {
-  CLI_PRINT("----------------------------------------");
+  CLI_PRINT("----------------------------------------")
   for (int32_t i = 0; i < options; i++) {
     CLI_PRINT("%d: %s", i + 1, action[i].str);
   }
-  CLI_PRINT("----------------------------------------");
+  CLI_PRINT("----------------------------------------")
   printf(">");
 }
 
@@ -117,6 +117,22 @@ error_code_e cli_action_menu(data_table_t *dt, const action_t *action, const uin
   return RC_SUCESS;
 }
 
+error_code_e cli_action_menu_dungeon(data_table_t *dt) {
+  error_code_e rc = RC_SUCESS;
+  action_t action[] = {
+      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
+      {2, "ダンジョン地図", ACTION_MENU_STATUS},
+      {3, "ステータス", ACTION_MENU_STATUS},
+      {4, "アイテム", ACTION_MENU_ITEM},
+      {5, "探索", ACTION_MENU_EXPLORER},
+      {6, "移動", ACTION_MENU_MOVE},
+  };
+  uint8_t options = sizeof(action) / sizeof(action_t);
+  cli_action_menu(dt, action, options);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  return RC_SUCESS;
+}
+
 error_code_e cli_action_menu_city(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
@@ -133,17 +149,17 @@ error_code_e cli_action_menu_city(data_table_t *dt) {
 }
 
 error_code_e cli_action_global_map(data_table_t *dt) {
-  cli_draw_global_map(dt);
+  cli_view_global_map(dt);
   return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_action_local_map(data_table_t *dt) {
-  cli_draw_local_map(dt);
+  cli_view_local_map(dt);
   return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_action_status(data_table_t *dt) {
-  CLI_PRINT("TBD")
+  cli_view_player_status(dt);
   return RC_INTERNAL_ERROR;
 }
 

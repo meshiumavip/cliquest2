@@ -23,6 +23,7 @@ error_code_e cli_scene_prologue(data_table_t *dt);
 error_code_e cli_scene_maou_castle(data_table_t *dt);
 error_code_e cli_action_menu(data_table_t *dt, const action_t *action, const uint8_t options);
 error_code_e cli_action_menu_city(data_table_t *dt);
+error_code_e cli_action_menu_dungeon(data_table_t *dt);
 error_code_e cli_action_global_map(data_table_t *dt);
 error_code_e cli_action_local_map(data_table_t *dt);
 error_code_e cli_action_status(data_table_t *dt);

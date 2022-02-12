@@ -35,7 +35,7 @@ error_code_e cli_scene_handler(void) {
       {SCENE_MAOU_CASTLE, cli_scene_maou_castle},
       {ACTION_MENU_MAIN_CITY, cli_action_menu_city},
       {ACTION_MENU_MAIN_ROAD,},
-      {ACTION_MENU_MAIN_DUNGEON,},
+      {ACTION_MENU_MAIN_DUNGEON,cli_action_menu_dungeon},
       {ACTION_MENU_GLOBAL_MAP, cli_action_global_map},
       {ACTION_MENU_LOACL_MAP, cli_action_local_map},
       {ACTION_MENU_STATUS, cli_action_status},
