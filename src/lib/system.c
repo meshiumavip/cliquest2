@@ -40,7 +40,17 @@ error_code_e cli_equip_item(player_equipment_t *pe, const item_list_e il, const 
 */ 
 
 error_code_e cli_view_player_status(data_table_t *dt){
-  CLI_PRINT("%s",dt->p_data.name)
+  player_status_t *ps = &(dt->p_data.ps);
+  CLI_PRINT("%sのステータス",dt->p_data.name)
+  CLI_PRINT("----------------------------------------")
+  CLI_PRINT("HP: %d/%d", ps->HP, ps->MAX_HP)
+  CLI_PRINT("MP: %d/%d", ps->MP, ps->MAX_MP)
+  CLI_PRINT("ATT: %d", ps->ATT)
+  CLI_PRINT("DEF: %d", ps->DEF)
+  CLI_PRINT("WIS: %d", ps->WIS)
+  CLI_PRINT("SPD: %d", ps->SPD)
+  CLI_PRINT("----------------------------------------")
+
 }
 
 static error_code_e cli_convert_local_map_elements(data_table_t *dt, const int32_t x, const int32_t y){
@@ -110,9 +120,8 @@ static error_code_e cli_convert_global_map_elements(data_table_t *dt, const int3
 }
 
 error_code_e cli_view_global_map(data_table_t *dt){
-  CLI_PRINT("%s", dt->gm_table[dt->p_data.gl_tag].name);
-  CLI_PRINT("%s", dt->lm_table[dt->p_data.ll_tag].name);
-  CLI_PRINT("----------------------------------------");
+  CLI_PRINT("%s %s", dt->gm_table[dt->p_data.gl_tag].name, dt->lm_table[dt->p_data.ll_tag].name)
+  CLI_PRINT("----------------------------------------")
   for(int32_t x=0 ; x<10; x++){
     for(int32_t y=0 ; y<10; y++){
       cli_convert_global_map_elements(dt, x, y);
@@ -170,6 +179,7 @@ error_code_e cli_init_player_data(player_t *p_data) {
 */
 error_code_e cli_create_item_table(item_t *i_table) {
   item_t item_table[] = {
+      {EMPTY, TIRE0, NORMAL_ITEM, "", "", 0, 0, 0, 0, 0, 0},
       {HP_PORTION, TIRE0, NORMAL_ITEM, "HPポーション", "HPを50回復する", 50, 0, 0, 0, 0, 0},
       {MP_PORTION, TIRE0, NORMAL_ITEM, "MPポーション", "MPを50回復する", 0, 50, 0, 0, 0, 0},
       {IRON_SWORD, TIRE1, WEAPON, "鉄の剣", "", 0, 0, 10, 0, 0, 10},

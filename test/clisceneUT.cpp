@@ -30,7 +30,7 @@ TEST_F(cli_scene, Test2) {
   data_table_t data_table;
   data_table_t* dt = &data_table;
   error_code_e rc = cli_scene_prologue(dt);
-  EXPECT_EQ(ACTION_MENU_MAIN_CITY, dt->next_s);
+  EXPECT_EQ(SCENE_MENU_MAIN_INCITY, dt->next_s);
   EXPECT_EQ(RC_SUCESS, rc);
 }
 

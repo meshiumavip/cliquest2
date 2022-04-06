@@ -9,7 +9,11 @@
 #include "scene.h"
 #include "system.h"
 
-static void cli_display_actions(const uint8_t options, const action_t *action) {
+
+  /*
+  View functions
+  */
+static void cli_scene_display_actions(const data_table_t *dt , const uint8_t options, const action_t *action) {
   CLI_PRINT("----------------------------------------")
   for (int32_t i = 0; i < options; i++) {
     CLI_PRINT("%d: %s", i + 1, action[i].str);
@@ -18,7 +22,7 @@ static void cli_display_actions(const uint8_t options, const action_t *action) {
   printf(">");
 }
 
-static error_code_e cli_replace_text(char *buf, const char *old, const char *rep) {
+static error_code_e cli_scene_replace_text(char *buf, const char *old, const char *rep) {
   CLI_ERROR(buf == NULL)
   CLI_ERROR(old == NULL)
   CLI_ERROR(rep == NULL)
@@ -40,7 +44,7 @@ static error_code_e cli_replace_text(char *buf, const char *old, const char *rep
   return RC_SUCESS;
 }
 
-static error_code_e cli_text_separator(const char *str, bool *is_separate) {
+static error_code_e cli_scene_text_separator(const char *str, bool *is_separate) {
   error_code_e rc = RC_SUCESS;
   if (strcmp(str, "▼\n") == 0) {
     CLI_PRINT("\n")
@@ -55,37 +59,41 @@ static error_code_e cli_text_separator(const char *str, bool *is_separate) {
   return RC_SUCESS;
 }
 
-static error_code_e cli_print_text(const char file[], const char *name) {
+static error_code_e cli_scene_print_text(const char file[], const char *name) {
   char str[PRINT_MAX];
   bool is_separate = false;
   FILE *fp = fopen(file, "r");
   CLI_ERROR(fp == NULL)
   while (fgets(str, sizeof(str), fp) != NULL) {
     is_separate = false;
-    cli_text_separator(str, &is_separate);
+    cli_scene_text_separator(str, &is_separate);
     if (is_separate) {
       continue;
     }
-    cli_replace_text(str, "ユーザ名", name);
+    cli_scene_replace_text(str, "ユーザ名", name);
     printf("%s", str);
   }
   fclose(fp);
   return RC_SUCESS;
 }
 
+  /*
+  Start scene
+  */
+
 error_code_e cli_scene_game_start(data_table_t *dt) {
   uint8_t num = 0;
   char file[] = "/home/wsl/cliquest2/text/title.txt";
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
-      {1, "さいしょから", SCENE_PROLOGUE},
-      {2, "つづきから", ACTION_MENU_MAIN_CITY},
+      {1, SCENE_PROLOGUE, "さいしょから"},
+      {2, SCENE_MENU_MAIN_INCITY, "つづきから"},
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
 
-  rc = cli_print_text(file, dt->p_data.name);
+  rc = cli_scene_print_text(file, dt->p_data.name);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  cli_display_actions(options, action);
+  cli_scene_display_actions(dt, options, action);
   rc = cli_get_input_action(options, &num);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   dt->next_s = action[num - 1].next_s;
@@ -96,20 +104,19 @@ error_code_e cli_scene_prologue(data_table_t *dt) {
   uint8_t rc = RC_SUCESS;
   rc = cli_init_player_data(&(dt->p_data));
   char file[] = "/home/wsl/cliquest2/text/prologue.txt";
-  rc = cli_print_text(file, dt->p_data.name);
+  rc = cli_scene_print_text(file, dt->p_data.name);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  dt->next_s = ACTION_MENU_MAIN_CITY;
+  dt->next_s = SCENE_MENU_MAIN_INCITY;
   return RC_SUCESS;
 }
 
-error_code_e cli_scene_maou_castle(data_table_t *dt) {
-  return RC_SUCESS;
-}
-
-error_code_e cli_action_menu(data_table_t *dt, const action_t *action, const uint8_t options) {
+  /*
+  Menu Scene
+  */
+error_code_e cli_scene_menu(data_table_t *dt, const action_t *action, const uint8_t options) {
   error_code_e rc = RC_SUCESS;
   uint8_t select_num;
-  cli_display_actions(options, action);
+  cli_scene_display_actions(dt, options, action);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   rc = cli_get_input_action(options, &select_num);
   CLI_ERROR(select_num > options)
@@ -117,63 +124,167 @@ error_code_e cli_action_menu(data_table_t *dt, const action_t *action, const uin
   return RC_SUCESS;
 }
 
-error_code_e cli_action_menu_dungeon(data_table_t *dt) {
+error_code_e cli_scene_menu_indungeon(data_table_t *dt) {
+  CLI_PRINT("%s %s", dt->gm_table[dt->p_data.gl_tag].name, dt->lm_table[dt->p_data.ll_tag].name)
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
-      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
-      {2, "ダンジョン地図", ACTION_MENU_STATUS},
-      {3, "ステータス", ACTION_MENU_STATUS},
-      {4, "アイテム", ACTION_MENU_ITEM},
-      {5, "探索", ACTION_MENU_EXPLORER},
-      {6, "移動", ACTION_MENU_MOVE},
+      {1, SCENE_MENU_GLOBAL_MAP, "世界地図"},  //
+      {2, SCENE_MENU_LOACL_MAP, "ダンジョンマップ"},
+      {3, SCENE_MENU_STATUS, "ステータス"},
+      {4, SCENE_MENU_ITEM, "アイテム"},
+      {5, SCENE_MENU_MOVE, "移動"},
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
-  cli_action_menu(dt, action, options);
+  cli_scene_menu(dt, action, options);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   return RC_SUCESS;
 }
 
-error_code_e cli_action_menu_city(data_table_t *dt) {
+error_code_e cli_scene_menu_onroad(data_table_t *dt) {
+  CLI_PRINT("%s", dt->gm_table[dt->p_data.gl_tag].name)
   error_code_e rc = RC_SUCESS;
   action_t action[] = {
-      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
-      {2, "ステータス", ACTION_MENU_STATUS},
-      {3, "アイテム", ACTION_MENU_ITEM},
-      {4, "探索", ACTION_MENU_EXPLORER},
-      {5, "移動", ACTION_MENU_MOVE},
+      {1, SCENE_MENU_GLOBAL_MAP, "世界地図"},  //
+      {2, SCENE_MENU_STATUS, "ステータス"},
+      {3, SCENE_MENU_ITEM, "アイテム"},
+      {5, SCENE_MENU_MOVE, "移動"},
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
-  cli_action_menu(dt, action, options);
+  cli_scene_menu(dt, action, options);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   return RC_SUCESS;
 }
 
-error_code_e cli_action_global_map(data_table_t *dt) {
+error_code_e cli_scene_menu_incity(data_table_t *dt) {
+  CLI_PRINT("%s %s", dt->gm_table[dt->p_data.gl_tag].name, dt->lm_table[dt->p_data.ll_tag].name)
+  error_code_e rc = RC_SUCESS;
+  action_t action[] = {
+      {1, SCENE_MENU_GLOBAL_MAP, "世界地図"},  //
+      {2, SCENE_MENU_STATUS, "ステータス"},
+      {3, SCENE_MENU_ITEM, "アイテム"},
+      {4, SCENE_MENU_EXPLORER, "探索"},
+      {5, SCENE_MENU_MOVE, "移動"},
+  };
+  uint8_t options = sizeof(action) / sizeof(action_t);
+  cli_scene_menu(dt, action, options);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  return RC_SUCESS;
+}
+
+error_code_e cli_scene_menu_global_map(data_table_t *dt) {
   cli_view_global_map(dt);
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_local_map(data_table_t *dt) {
+error_code_e cli_scene_menu_local_map(data_table_t *dt) {
   cli_view_local_map(dt);
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_status(data_table_t *dt) {
+error_code_e cli_scene_menu_status(data_table_t *dt) {
   cli_view_player_status(dt);
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_item(data_table_t *dt) {
-  CLI_PRINT("TBD")
+error_code_e cli_scene_menu_item(data_table_t *dt) {
+  CLI_PRINT("%s %s", dt->gm_table[dt->p_data.gl_tag].name, dt->lm_table[dt->p_data.ll_tag].name)
+  CLI_PRINT("所持品")
+  CLI_PRINT("----------------------------------------")
+  for(int32_t i=0; i<10; i++){
+    CLI_PRINT("%-20s %-20s", dt->i_table[dt->p_data.item[i]].item_name, dt->i_table[dt->p_data.item[i+10]].item_name)
+  }
+  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_explorer(data_table_t *dt) {
-  CLI_PRINT("TBD")
+/*
+  Explorer Scene
+*/
+
+error_code_e cli_scene_menu_explorer_southport_dungeon(data_table_t *dt){
+  CLI_PRINT("港町の下水道")
+  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
 }
 
-error_code_e cli_action_move(data_table_t *dt) {
-  CLI_PRINT("TBD")
+error_code_e cli_scene_menu_explorer_guild(data_table_t *dt){
+  CLI_PRINT("ギルド")
+  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_scene_menu_explorer_blacksmith(data_table_t *dt){
+  CLI_PRINT("鍛冶屋")
+  CLI_PRINT("----------------------------------------")
+  return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_scene_menu_explorer_itemshop(data_table_t *dt){
+  CLI_PRINT("道具屋")
+  CLI_PRINT("----------------------------------------")
+  return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_scene_menu_explorer_southport(data_table_t *dt) {
+  error_code_e rc = RC_SUCESS;
+  CLI_PRINT("探索")
+  CLI_PRINT("----------------------------------------")
+  action_t action[] = {
+      {1, SCENE_MENU_EXPLORER_ITEMSHOP, "道具屋"},
+      {2, SCENE_MENU_EXPLORER_BLACKSMITH, "鍛冶屋"},
+      {3, SCENE_MENU_EXPLORER_GUILD, "冒険者ギルド"},
+      {4, SCENE_MENU_EXPLORER_SOUTHPORT_DUNGEON, "港町の下水道"},
+  };
+  uint8_t options = sizeof(action) / sizeof(action_t);
+  cli_scene_menu(dt, action, options);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_scene_menu_explorer(data_table_t *dt){
+  switch (dt->p_data.ll_tag){
+    case SOUTH_PORT:
+      cli_scene_menu_explorer_southport(dt);
+      break;
+    default:
+      break;
+  }
+  return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_scene_menu_move_east(data_table_t *dt) {
+  return RC_INTERNAL_ERROR;
+}
+error_code_e cli_scene_menu_move_west(data_table_t *dt) {
+  return RC_INTERNAL_ERROR;
+}
+error_code_e cli_scene_menu_move_south(data_table_t *dt) {
+  return RC_INTERNAL_ERROR;
+}
+error_code_e cli_scene_menu_move_north(data_table_t *dt) {
+  return RC_INTERNAL_ERROR;
+}
+
+error_code_e cli_scene_menu_move(data_table_t *dt) {
+  error_code_e rc = RC_SUCESS;
+  CLI_PRINT("%s %s", dt->gm_table[dt->p_data.gl_tag].name, dt->lm_table[dt->p_data.ll_tag].name)
+  CLI_PRINT("移動")
+  CLI_PRINT("----------------------------------------")
+  action_t action[] = {
+      {1, SCENE_MENU_MOVE_EAST, "東"},
+      {2, SCENE_MENU_MOVE_WEST, "西"},
+      {3, SCENE_MENU_MOVE_SOUTH, "南"},
+      {4, SCENE_MENU_MOVE_NORTH, "北"},
+  };
+  uint8_t options = sizeof(action) / sizeof(action_t);
+  cli_scene_menu(dt, action, options);
+  CLI_ERROR(rc == RC_INTERNAL_ERROR)
+  return RC_INTERNAL_ERROR;
+}
+
+  /*
+  Dungeon functions
+  */
+error_code_e cli_scene_dungeon_maoucastle(data_table_t *dt) {
+  return RC_SUCESS;
 }

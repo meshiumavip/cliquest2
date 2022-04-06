@@ -66,12 +66,11 @@ TEST_F(cli_system, Test4_2) {
 TEST_F(cli_system, Test4_3) {
   uint8_t num = 0;
   action_t action[] = {
-      {1, "世界地図", ACTION_MENU_GLOBAL_MAP},  //
-      {2, "ダンジョン地図", ACTION_MENU_LOACL_MAP},
-      {3, "ステータス", ACTION_MENU_STATUS},
-      {4, "アイテム", ACTION_MENU_ITEM},
-      {5, "探索", ACTION_MENU_EXPLORER},
-      {6, "移動", ACTION_MENU_MOVE},
+      {1, SCENE_MENU_GLOBAL_MAP, "世界地図"},  //
+      {2, SCENE_MENU_STATUS, "ステータス"},
+      {3, SCENE_MENU_ITEM, "アイテム"},
+      {5, SCENE_MENU_EXPLORER, "探索"},
+      {5, SCENE_MENU_MOVE, "移動"},
   };
   uint8_t options = sizeof(action)/sizeof(action_t);
   EXPECT_EQ(RC_SUCESS, cli_get_input_action(options, &num));
