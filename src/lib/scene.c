@@ -203,32 +203,27 @@ error_code_e cli_scene_menu_item(data_table_t *dt) {
 
 error_code_e cli_scene_menu_explorer_southport_dungeon(data_table_t *dt){
   CLI_PRINT("港町の下水道")
-  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_scene_menu_explorer_guild(data_table_t *dt){
   CLI_PRINT("ギルド")
-  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_scene_menu_explorer_blacksmith(data_table_t *dt){
   CLI_PRINT("鍛冶屋")
-  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_scene_menu_explorer_itemshop(data_table_t *dt){
   CLI_PRINT("道具屋")
-  CLI_PRINT("----------------------------------------")
   return RC_INTERNAL_ERROR;
 }
 
 error_code_e cli_scene_menu_explorer_southport(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
   CLI_PRINT("探索")
-  CLI_PRINT("----------------------------------------")
   action_t action[] = {
       {1, SCENE_MENU_EXPLORER_ITEMSHOP, "道具屋"},
       {2, SCENE_MENU_EXPLORER_BLACKSMITH, "鍛冶屋"},
