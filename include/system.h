@@ -24,6 +24,8 @@ typedef struct{
   SCENE scene;
 }scene_handler_t;
 
+error_code_e cli_create_tabldes(data_table_t *dt);
+
 error_code_e cli_system_clear();
 error_code_e cli_logger(const char *filename, const int32_t line, const char *funcname, const char *str);
 

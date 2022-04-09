@@ -13,7 +13,7 @@
   /*
   View functions
   */
-static void cli_scene_display_actions(const data_table_t *dt , const uint8_t options, const action_t *action) {
+static void cli_scene_display_actions(const data_table_t *dt, const action_t *action , const uint8_t options) {
   CLI_PRINT("----------------------------------------")
   for (int32_t i = 0; i < options; i++) {
     CLI_PRINT("%d: %s", i + 1, action[i].str);
@@ -93,7 +93,7 @@ error_code_e cli_scene_game_start(data_table_t *dt) {
 
   rc = cli_scene_print_text(file, dt->p_data.name);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
-  cli_scene_display_actions(dt, options, action);
+  cli_scene_display_actions(dt, action, options);
   rc = cli_get_input_action(options, &num);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   dt->next_s = action[num - 1].next_s;
@@ -116,7 +116,7 @@ error_code_e cli_scene_prologue(data_table_t *dt) {
 error_code_e cli_scene_menu(data_table_t *dt, const action_t *action, const uint8_t options) {
   error_code_e rc = RC_SUCESS;
   uint8_t select_num;
-  cli_scene_display_actions(dt, options, action);
+  cli_scene_display_actions(dt, action, options);
   CLI_ERROR(rc == RC_INTERNAL_ERROR)
   rc = cli_get_input_action(options, &select_num);
   CLI_ERROR(select_num > options)
@@ -147,7 +147,7 @@ error_code_e cli_scene_menu_onroad(data_table_t *dt) {
       {1, SCENE_MENU_GLOBAL_MAP, "世界地図"},  //
       {2, SCENE_MENU_STATUS, "ステータス"},
       {3, SCENE_MENU_ITEM, "アイテム"},
-      {5, SCENE_MENU_MOVE, "移動"},
+      {4, SCENE_MENU_MOVE, "移動"},
   };
   uint8_t options = sizeof(action) / sizeof(action_t);
   cli_scene_menu(dt, action, options);
@@ -264,7 +264,6 @@ error_code_e cli_scene_menu_move(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
   CLI_PRINT("%s %s", dt->gm_table[dt->p_data.gl_tag].name, dt->lm_table[dt->p_data.ll_tag].name)
   CLI_PRINT("移動")
-  CLI_PRINT("----------------------------------------")
   action_t action[] = {
       {1, SCENE_MENU_MOVE_EAST, "東"},
       {2, SCENE_MENU_MOVE_WEST, "西"},

@@ -127,6 +127,7 @@ typedef enum {
   SCENE_MENU_MOVE_SOUTH,
   SCENE_MENU_MOVE_NORTH,
   SCENE_DUNGEON_MAOU_CASTLE,
+  SCENE_UT,
 } scene_e;
 
 typedef struct {

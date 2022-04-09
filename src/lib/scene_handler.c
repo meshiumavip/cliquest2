@@ -7,7 +7,7 @@
 #include "scene.h"
 #include "system.h"
 
-static error_code_e cli_create_tabldes(data_table_t *dt) {
+error_code_e cli_create_tabldes(data_table_t *dt) {
   error_code_e rc = RC_SUCESS;
   local_map_t *lm_table = dt->lm_table;
   global_map_t *gm_table = dt->gm_table;
